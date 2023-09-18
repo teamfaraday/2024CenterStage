@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.teamcode.helper.HardwareSetup;
 
 @TeleOp(name="TestTeleOp")
-public class TestTeleop extends OpMode {
+public class TestTeleOp extends OpMode {
 
     public DcMotor frontLeft;
     public DcMotor frontRight;
