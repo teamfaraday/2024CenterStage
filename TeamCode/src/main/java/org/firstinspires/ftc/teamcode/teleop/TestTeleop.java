@@ -4,6 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.teamcode.helper.HardwareSetup;
+
 @TeleOp(name="TestTeleOp")
 public class TestTeleop extends OpMode {
 
@@ -15,6 +17,8 @@ public class TestTeleop extends OpMode {
 
     @Override
     public void init() {
+
+        HardwareSetup hs = new HardwareSetup(frontLeft, frontRight, backLeft, backRight);
 
         frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
         frontRight = hardwareMap.get(DcMotor.class, "frontRight");
