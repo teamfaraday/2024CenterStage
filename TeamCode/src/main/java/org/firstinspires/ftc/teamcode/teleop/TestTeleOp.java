@@ -16,6 +16,7 @@ public class TestTeleOp extends OpMode {
     public DcMotor backLeft;
     public DcMotor backRight;
     public DcMotor arm;
+    public DcMotor armRotate; //
     public Servo claw;
     public enum LiftState {
         LIFT_START,
@@ -37,11 +38,13 @@ public class TestTeleOp extends OpMode {
         backLeft = hardwareMap.get(DcMotor.class, "backLeft");
         backRight = hardwareMap.get(DcMotor.class, "backRight");
         arm = hardwareMap.get(DcMotor.class, "arm");
+        armRotate = hardwareMap.get(DcMotor.class, "armRotate"); //
         claw = hardwareMap.get(Servo.class, "claw");
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        armRotate.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE); //
 
 
         frontLeft.setDirection(DcMotor.Direction.REVERSE);
@@ -100,12 +103,20 @@ public class TestTeleOp extends OpMode {
 
         }
 
-        //Down
+        //Rotate Claw
         if (gamepad1.b) {
 
-            arm.setTargetPosition(0);
-            arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            arm.setPower(0.18);
+            armRotate.setTargetPosition(180);
+            armRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            armRotate.setPower(0.2);
+        }
+
+        //Reset Claw
+        if (gamepad1.a) {
+
+            armRotate.setTargetPosition(0);
+            armRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            armRotate.setPower(0.2);
         }
 
         //Close
