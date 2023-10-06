@@ -47,11 +47,8 @@ public class TestTeleOp extends OpMode {
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         armRotate.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE); //
 
-        armRotate.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        frontLeft.setDirection(DcMotor.Direction.REVERSE);
-        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
-
+        frontRight.setDirection(DcMotor.Direction.REVERSE);
+        backRight.setDirection(DcMotor.Direction.REVERSE);
     }
 
 
@@ -79,42 +76,56 @@ public class TestTeleOp extends OpMode {
         double maxPower = 0.8;
 
         double y = -gamepad1.left_stick_y;
-        double x = gamepad1.left_stick_x * 1.25;
+        double x = -gamepad1.left_stick_x * 0.75;
         double rx = gamepad1.right_stick_x * 0.5;
 
-        //frontLeft.setPower(Range.clip(y +x +rx,minPower,maxPower));
-        //backLeft.setPower(Range.clip(y -x +rx,minPower,maxPower));
-        //frontRight.setPower(Range.clip(y -x -rx,minPower,maxPower));
-        //backRight.setPower(Range.clip(y +x -rx,minPower,maxPower));
+        frontLeft.setPower(Range.clip(y +x +rx,minPower,maxPower));
+        backLeft.setPower(Range.clip(y -x +rx,minPower,maxPower));
+        frontRight.setPower(Range.clip(y -x -rx,minPower,maxPower));
+        backRight.setPower(Range.clip(y +x -rx,minPower,maxPower));
+
 
         //Up
         if (gamepad1.dpad_up) {
 
             arm.setPower(0.86);
+            telemetry.addData("Position", arm.getCurrentPosition());
 
         } else if (!gamepad1.dpad_up) {
 
-            arm.setPower(0.25);
+            if (arm.getCurrentPosition() > 400) {
 
+                arm.setPower(-0.214);
+
+            } else {
+
+                arm.setPower(0.274);
+            }
         }
         //guide
         if (gamepad1.dpad_down) {
 
 
-            arm.setPower(-0.45);
+            arm.setPower(-0.6);
 
         }
 
+
         //Rotate Claw
-        if (gamepad1.b) {
+        if (gamepad1.a) {
+
             armRotate.setPower(0.2);
+
+        } else if (!gamepad1.a) {
+
+            armRotate.setPower(0);
 
         }
 
         //Reset Claw
-        if (gamepad1.a) {
-            
-            armRotate.setPower(0.2);
+        if (gamepad1.b) {
+
+            armRotate.setPower(-0.2);
 
         }
 
