@@ -40,16 +40,15 @@ public class TestTeleOp extends OpMode {
         arm = hardwareMap.get(DcMotor.class, "arm");
         armRotate = hardwareMap.get(DcMotor.class, "armRotate"); //
         claw = hardwareMap.get(Servo.class, "claw");
+
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         armRotate.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE); //
 
-
-        frontLeft.setDirection(DcMotor.Direction.REVERSE);
-        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
-
+        frontRight.setDirection(DcMotor.Direction.REVERSE);
+        backRight.setDirection(DcMotor.Direction.REVERSE);
     }
 
 
@@ -77,46 +76,57 @@ public class TestTeleOp extends OpMode {
         double maxPower = 0.8;
 
         double y = -gamepad1.left_stick_y;
-        double x = gamepad1.left_stick_x * 1.25;
+        double x = -gamepad1.left_stick_x * 0.75;
         double rx = gamepad1.right_stick_x * 0.5;
 
-        //frontLeft.setPower(Range.clip(y +x +rx,minPower,maxPower));
-        //backLeft.setPower(Range.clip(y -x +rx,minPower,maxPower));
-        //frontRight.setPower(Range.clip(y -x -rx,minPower,maxPower));
-        //backRight.setPower(Range.clip(y +x -rx,minPower,maxPower));
+        frontLeft.setPower(Range.clip(y +x +rx,minPower,maxPower));
+        backLeft.setPower(Range.clip(y -x +rx,minPower,maxPower));
+        frontRight.setPower(Range.clip(y -x -rx,minPower,maxPower));
+        backRight.setPower(Range.clip(y +x -rx,minPower,maxPower));
+
 
         //Up
         if (gamepad1.dpad_up) {
 
-            arm.setPower(0.5);
+            arm.setPower(0.86);
+            telemetry.addData("Position", arm.getCurrentPosition());
 
         } else if (!gamepad1.dpad_up) {
 
-            arm.setPower(0.2);
+            if (arm.getCurrentPosition() > 400) {
 
+                arm.setPower(-0.214);
+
+            } else {
+
+                arm.setPower(0.274);
+            }
         }
         //guide
         if (gamepad1.dpad_down) {
 
 
-            arm.setPower(-0.15);
+            arm.setPower(-0.6);
 
         }
 
-        //Rotate Claw
-        if (gamepad1.b) {
 
-            armRotate.setTargetPosition(180);
-            armRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //Rotate Claw
+        if (gamepad1.a) {
+
             armRotate.setPower(0.2);
+
+        } else if (!gamepad1.a) {
+
+            armRotate.setPower(0);
+
         }
 
         //Reset Claw
-        if (gamepad1.a) {
+        if (gamepad1.b) {
 
-            armRotate.setTargetPosition(0);
-            armRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            armRotate.setPower(0.2);
+            armRotate.setPower(-0.2);
+
         }
 
         //Close
