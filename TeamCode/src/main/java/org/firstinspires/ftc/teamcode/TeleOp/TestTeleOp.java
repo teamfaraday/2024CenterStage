@@ -2,9 +2,9 @@ package org.firstinspires.ftc.teamcode.TeleOp;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -14,17 +14,16 @@ import com.qualcomm.robotcore.util.Range;
 public class TestTeleOp extends OpMode {
 
 
-    public DcMotor frontLeft;
-    public DcMotor frontRight;
-    public DcMotor backLeft;
-    public DcMotor backRight;
-    public DcMotor armSwivel;
-    public DcMotor armRotate; //
+    public DcMotor fL;
+    public DcMotor fR;
+    public DcMotor bL;
+    public DcMotor bR;
+    public DcMotor arm;
+    public DcMotor armRotate;
     public Servo clawR;
-
-
     public Servo clawL;
     public Servo drone;
+    public DcMotor hang;
     public static final double MOTOR_MULTIPLIER = 0.75;
     public enum LiftState {
         LIFT_START,
@@ -46,26 +45,27 @@ public class TestTeleOp extends OpMode {
     public void init() {
 
 
-        frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
-        frontRight = hardwareMap.get(DcMotor.class, "frontRight");
-        backLeft = hardwareMap.get(DcMotor.class, "backLeft");
-        backRight = hardwareMap.get(DcMotor.class, "backRight");
-        armSwivel = hardwareMap.get(DcMotor.class, "armSwivel");
+        fL = hardwareMap.get(DcMotor.class, "frontLeft");
+        fR = hardwareMap.get(DcMotor.class, "frontRight");
+        bL = hardwareMap.get(DcMotor.class, "backLeft");
+        bR = hardwareMap.get(DcMotor.class, "backRight");
+        arm = hardwareMap.get(DcMotor.class, "arm");
         armRotate = hardwareMap.get(DcMotor.class, "armRotate"); //
         clawR = hardwareMap.get(Servo.class, "clawR");
         clawL = hardwareMap.get(Servo.class, "clawL");
+        hang = hardwareMap.get(DcMotor.class, "hang");
         drone = hardwareMap.get(Servo.class, "drone");
 
 
-        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        fL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        fR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        bL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        bR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         armRotate.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE); //
 
 
-        frontRight.setDirection(DcMotor.Direction.REVERSE);
-        backRight.setDirection(DcMotor.Direction.REVERSE);
+        fR.setDirection(DcMotor.Direction.REVERSE);
+        bR.setDirection(DcMotor.Direction.REVERSE);
     }
 
 
@@ -104,9 +104,11 @@ public class TestTeleOp extends OpMode {
         double maxPower = 0.8;
 
 
-        double y = -gamepad1.left_stick_y;
+        double y = gamepad1.left_stick_y;
         double x = -gamepad1.left_stick_x * 0.75;
-        double rx = gamepad1.right_stick_x * 0.5;
+        double rx = -gamepad1.right_stick_x * 0.75;
+        int lim1 = 950;
+        int lim2 = 1262;
 
 
         double denominator  = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
@@ -116,48 +118,77 @@ public class TestTeleOp extends OpMode {
         double backRightPower = (y+x-rx) / denominator;
 
 
-        frontLeft.setPower(frontLeftPower*MOTOR_MULTIPLIER);
-        backLeft.setPower(backLeftPower*MOTOR_MULTIPLIER);
-        frontRight.setPower(frontRightPower*MOTOR_MULTIPLIER);
-        backRight.setPower(backRightPower*MOTOR_MULTIPLIER);
-//        frontLeft.setPower(Range.clip(y +x +rx,minPower,maxPower));
-//        backLeft.setPower(Range.clip(y -x +rx,minPower,maxPower));
-//        frontRight.setPower(Range.clip(y -x -rx,minPower,maxPower));
-//        backRight.setPower(Range.clip(y +x -rx,minPower,maxPower));
+        fL.setPower(frontLeftPower*MOTOR_MULTIPLIER);
+        bL.setPower(backLeftPower*MOTOR_MULTIPLIER);
+        fR.setPower(frontRightPower*MOTOR_MULTIPLIER);
+        bR.setPower(backRightPower*MOTOR_MULTIPLIER);
+//        fL.setPower(Range.clip(y +x +rx,minPower,maxPower));
+//        bL.setPower(Range.clip(y -x +rx,minPower,maxPower));
+//        fR.setPower(Range.clip(y -x -rx,minPower,maxPower));
+//        bR.setPower(Range.clip(y +x -rx,minPower,maxPower));
 
 
 
 
         //Up
         if (gamepad1.y) {
-
-
-            armRotate.setPower(0.86);
-            telemetry.addData("Position", armRotate.getCurrentPosition());
-
-
+            if (arm.getCurrentPosition() > lim1) {
+                arm.setPower(0.14);
+                telemetry.addData("Position", arm.getCurrentPosition());
+            }
+            else {
+                arm.setPower(0.93);
+                telemetry.addData("Position", arm.getCurrentPosition());
+            }
         } else if (!gamepad1.y) {
 
 
-            if (armRotate.getCurrentPosition() > 400) {
+            if (arm.getCurrentPosition() > lim1 && arm.getCurrentPosition() <= lim2) {
 
 
-                armRotate.setPower(-0.214);
+                arm.setPower(0);
 
 
-            } else {
+            }
+            else if (arm.getCurrentPosition() > lim2) {
 
 
-                armRotate.setPower(0.274);
+                arm.setPower(-0.114);
+
+
+            }
+            else {
+
+
+                arm.setPower(0.214);
             }
         }
         //guide
         if (gamepad1.a) {
 
 
+            arm.setPower(-0.78);
+            telemetry.addData("Position", arm.getCurrentPosition());
 
 
-            armRotate.setPower(-0.6);
+        }
+
+
+        //slow movement
+        if (gamepad1.x) {
+
+
+            arm.setPower(0.47);
+            telemetry.addData("Position", arm.getCurrentPosition());
+
+
+        }
+        //guide
+        if (gamepad1.b) {
+
+
+            arm.setPower(-0.27);
+            telemetry.addData("Position", arm.getCurrentPosition());
 
 
         }
@@ -166,49 +197,79 @@ public class TestTeleOp extends OpMode {
 
 
         //Rotate Claw
-        if (gamepad1.right_bumper) {
+        if (gamepad1.left_bumper) {
 
 
-            armSwivel.setPower(0.2);
+            armRotate.setPower(0.3);
 
 
-        } else if (!gamepad1.right_bumper) {
+        } else if (!gamepad1.left_bumper) {
 
 
-            armSwivel.setPower(0);
+            armRotate.setPower(0);
 
 
         }
 
 
         //Reset Claw
-        if (gamepad1.left_bumper) {
-
-
-            armSwivel.setPower(-0.2);
-
-
-        }
-
-
-        //Close
         if (gamepad1.right_bumper) {
 
 
-            clawR.setPosition(0.32);
+            armRotate.setPower(-0.3);
+
+
         }
 
 
-        //Open
-        if (gamepad1.left_bumper) {
 
 
-            clawR.setPosition(0.23);
+        //CloseRight
+        if (gamepad2.dpad_right) {
+
+
+
+
+            clawR.setPosition(0.45);
         }
 
 
+        //OpenRight
+        if (gamepad2.dpad_left) {
+
+
+            clawR.setPosition(0.28);
+        }
+        //CloseLeft
+        if (gamepad2.b) {
+
+
+            clawL.setPosition(0.9);
+        }
+
+
+        //OpenLeft
+        if (gamepad2.x) {
+
+
+            clawL.setPosition(1.25);
+        }
         //Drone
-      //  if gamepad1.
+        if (gamepad2.a && gamepad2.right_stick_button){
+            drone.setPosition(0.7);
+        }
+        //Hanging
+        //Up
+        if (gamepad2.right_bumper){
+            hang.setPower(0.8);
+        }
+        else if (!gamepad2.right_bumper){
+            hang.setPower(0);
+        }
+        //Down
+        if (gamepad2.left_bumper){
+            hang.setPower(-0.8);
+        }
     }
 }
 
