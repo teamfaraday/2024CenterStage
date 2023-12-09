@@ -41,9 +41,11 @@ public class TestTeleOp extends OpMode {
 
 
 
+
     @Override
     public void init() {
 
+        telemetry.update();
 
         fL = hardwareMap.get(DcMotor.class, "frontLeft");
         fR = hardwareMap.get(DcMotor.class, "frontRight");
@@ -66,6 +68,11 @@ public class TestTeleOp extends OpMode {
 
         fR.setDirection(DcMotor.Direction.REVERSE);
         bR.setDirection(DcMotor.Direction.REVERSE);
+
+
+        clawL.setDirection(Servo.Direction.FORWARD);
+
+
     }
 
 
@@ -75,7 +82,7 @@ public class TestTeleOp extends OpMode {
 
     @Override
     public void loop() {
-
+        telemetry.update();
 
         /**
          switch (liftState) {
@@ -100,74 +107,62 @@ public class TestTeleOp extends OpMode {
          }**/
 
 
-        double minPower = -0.8;
-        double maxPower = 0.8;
+        double minPower = -0.9;
+        double maxPower = 0.9;
 
 
         double y = gamepad1.left_stick_y;
         double x = -gamepad1.left_stick_x * 0.75;
         double rx = -gamepad1.right_stick_x * 0.75;
-        int lim1 = 950;
-        int lim2 = 1262;
+        int lim1 = -900;
+        int lim2 = -1200;
+
+        fL.setPower(Range.clip(y +x +rx,minPower,maxPower));
+        bL.setPower(Range.clip(y -x +rx,minPower,maxPower));
+        fR.setPower(Range.clip(y -x -rx,minPower,maxPower));
+        bR.setPower(Range.clip(y +x -rx,minPower,maxPower));
 
 
-        double denominator  = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
-        double frontLeftPower = (y+x+rx) / denominator;
-        double backLeftPower = (y-x+rx) / denominator;
-        double frontRightPower = (y-x-rx) / denominator;
-        double backRightPower = (y+x-rx) / denominator;
-
-
-        fL.setPower(frontLeftPower*MOTOR_MULTIPLIER);
-        bL.setPower(backLeftPower*MOTOR_MULTIPLIER);
-        fR.setPower(frontRightPower*MOTOR_MULTIPLIER);
-        bR.setPower(backRightPower*MOTOR_MULTIPLIER);
-//        fL.setPower(Range.clip(y +x +rx,minPower,maxPower));
-//        bL.setPower(Range.clip(y -x +rx,minPower,maxPower));
-//        fR.setPower(Range.clip(y -x -rx,minPower,maxPower));
-//        bR.setPower(Range.clip(y +x -rx,minPower,maxPower));
-
-
-
+        telemetry.update();
 
         //Up
         if (gamepad1.y) {
-            if (arm.getCurrentPosition() > lim1) {
-                arm.setPower(0.14);
+            if (arm.getCurrentPosition() < lim1) {
+                arm.setPower(-0.24);
                 telemetry.addData("Position", arm.getCurrentPosition());
             }
             else {
-                arm.setPower(0.93);
+                arm.setPower(-0.93);
                 telemetry.addData("Position", arm.getCurrentPosition());
             }
         } else if (!gamepad1.y) {
 
 
-            if (arm.getCurrentPosition() > lim1 && arm.getCurrentPosition() <= lim2) {
+            if (arm.getCurrentPosition() < lim1 && arm.getCurrentPosition() >= lim2) {
 
 
                 arm.setPower(0);
 
 
             }
-            else if (arm.getCurrentPosition() > lim2) {
+            else if (arm.getCurrentPosition() < lim2) {
 
 
-                arm.setPower(-0.114);
+                arm.setPower(0.114);
 
 
             }
             else {
 
 
-                arm.setPower(0.214);
+                arm.setPower(-0.214);
             }
         }
         //guide
         if (gamepad1.a) {
 
 
-            arm.setPower(-0.78);
+            arm.setPower(0.78);
             telemetry.addData("Position", arm.getCurrentPosition());
 
 
@@ -175,7 +170,7 @@ public class TestTeleOp extends OpMode {
 
 
         //slow movement
-        if (gamepad1.x) {
+        if (gamepad1.b) {
 
 
             arm.setPower(0.47);
@@ -184,7 +179,7 @@ public class TestTeleOp extends OpMode {
 
         }
         //guide
-        if (gamepad1.b) {
+        if (gamepad1.x) {
 
 
             arm.setPower(-0.27);
@@ -200,7 +195,7 @@ public class TestTeleOp extends OpMode {
         if (gamepad1.left_bumper) {
 
 
-            armRotate.setPower(0.3);
+            armRotate.setPower(-0.3);
 
 
         } else if (!gamepad1.left_bumper) {
@@ -209,14 +204,14 @@ public class TestTeleOp extends OpMode {
             armRotate.setPower(0);
 
 
-        }
+         }
 
 
         //Reset Claw
         if (gamepad1.right_bumper) {
 
 
-            armRotate.setPower(-0.3);
+            armRotate.setPower(0.3);
 
 
         }
@@ -225,51 +220,52 @@ public class TestTeleOp extends OpMode {
 
 
         //CloseRight
-        if (gamepad2.dpad_right) {
+        if (gamepad2.dpad_left) {
 
-
-
-
-            clawR.setPosition(0.45);
+            telemetry.addData("servoL", clawL.getDirection());
+            telemetry.update();
+            clawR.setPosition(0.30);
         }
 
 
         //OpenRight
-        if (gamepad2.dpad_left) {
+        if (gamepad2.dpad_right) {
+            telemetry.addData("servoL", clawL.getDirection());
+            telemetry.update();
 
-
-            clawR.setPosition(0.28);
+            clawR.setPosition(0.48);
         }
         //CloseLeft
         if (gamepad2.b) {
+            telemetry.addData("servoR", clawR.getPosition());
 
-
-            clawL.setPosition(0.9);
+            telemetry.update();
+            clawL.setPosition(1.57);
         }
 
 
         //OpenLeft
         if (gamepad2.x) {
+            telemetry.addData("servoR", clawR.getPosition());
 
-
-            clawL.setPosition(1.25);
+            telemetry.update();
+            clawL.setPosition(0.83);
         }
         //Drone
-        if (gamepad2.a && gamepad2.right_stick_button){
-            drone.setPosition(0.7);
+        if (gamepad2.left_trigger > 0.8 && gamepad2.right_trigger > 0.8){
+            drone.setPosition(0);
         }
         //Hanging
         //Up
-        if (gamepad2.right_bumper){
+        if (gamepad2.left_bumper){
             hang.setPower(0.8);
         }
-        else if (!gamepad2.right_bumper){
+        else if (!gamepad2.left_bumper){
             hang.setPower(0);
         }
         //Down
-        if (gamepad2.left_bumper){
+        if (gamepad2.right_bumper){
             hang.setPower(-0.8);
         }
     }
 }
-
