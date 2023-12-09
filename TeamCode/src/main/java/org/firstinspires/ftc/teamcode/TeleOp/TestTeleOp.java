@@ -84,9 +84,11 @@ public class TestTeleOp extends OpMode {
     public void loop() {
         telemetry.update();
 
+        telemetry.addData("drone", drone.getPosition());
+        telemetry.update();
+
         /**
          switch (liftState) {
-
 
          case LIFT_START:
 
@@ -114,8 +116,8 @@ public class TestTeleOp extends OpMode {
         double y = gamepad1.left_stick_y;
         double x = -gamepad1.left_stick_x * 0.75;
         double rx = -gamepad1.right_stick_x * 0.75;
-        int lim1 = -900;
-        int lim2 = -1200;
+        int lim1 = -730;
+        int lim2 = -1150;
 
         fL.setPower(Range.clip(y +x +rx,minPower,maxPower));
         bL.setPower(Range.clip(y -x +rx,minPower,maxPower));
@@ -253,7 +255,10 @@ public class TestTeleOp extends OpMode {
         }
         //Drone
         if (gamepad2.left_trigger > 0.8 && gamepad2.right_trigger > 0.8){
-            drone.setPosition(0);
+            drone.setDirection(Servo.Direction.REVERSE);
+            drone.setPosition(0.7);
+            telemetry.addData("drone", drone.getPosition());
+            telemetry.update();
         }
         //Hanging
         //Up

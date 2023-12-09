@@ -91,13 +91,9 @@ public class BlueLeftAuto extends LinearOpMode {
 
         while (opModeIsActive() && stopped == false) {
             stopped = false;
-            forward(100,0.8);
             counterClockwise(90,0.8);
-            forward(100,0.8);
-            clockwise(90,0.8);
-            backward(100,0.8);
-            counterClockwise(90, 0.8);
-            forward(100, 0.8);
+            forward(120,0.8);
+
             stopped = true;
         }
 

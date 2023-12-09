@@ -14,8 +14,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 
-@Autonomous(name = "BlueRightAuto")
-public class BlueRightAuto extends LinearOpMode {
+@Autonomous(name = "RedLeftAuto")
+public class RedLeftAuto extends LinearOpMode {
 
     DcMotor frontLeft;
     DcMotor frontRight;
@@ -92,11 +92,11 @@ public class BlueRightAuto extends LinearOpMode {
         while (opModeIsActive() && stopped == false) {
             stopped = false;
             forward(100,0.8);
-            counterClockwise(90,0.8);
-            forward(100,0.8);
             clockwise(90,0.8);
+            forward(100,0.8);
+            counterClockwise(90,0.8);
             backward(100,0.8);
-            counterClockwise(90, 0.8);
+            clockwise(90, 0.8);
             forward(100, 0.8);
             stopped = true;
         }
