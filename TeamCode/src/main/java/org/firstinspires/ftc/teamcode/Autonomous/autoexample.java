@@ -38,12 +38,22 @@ public class autoexample extends LinearOpMode {
      */
     private VisionPortal visionPortal;
 
-    Servo drone;
+    DcMotor motorTest;
+
+    public int pos;
+
 
     @Override
     public void runOpMode() {
 
-        drone = hardwareMap.get(Servo.class, "drone");
+        motorTest = hardwareMap.get(DcMotor.class, "slide"); //insert name here
+
+        motorTest.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+
+        motorTest.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        motorTest.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         initTfod();
 
@@ -53,30 +63,30 @@ public class autoexample extends LinearOpMode {
         telemetry.update();
         waitForStart();
 
-        List<Recognition> currentRecognitions = tfod.getRecognitions();
-        currentRecognitions = tfod.getRecognitions();
-        telemetry.addData("Recs", currentRecognitions);
-        telemetry.update();
-
 
 
 
         //if (opModeIsActive()) {
-           // while (opModeIsActive()) {
+            while (opModeIsActive()) {
 
-        if (currentRecognitions.size() != 0) {
-            drone.setPosition(0.5);
-            telemetry.addData("test", "test");
+                List<Recognition> currentRecognitions = tfod.getRecognitions();
+                currentRecognitions = tfod.getRecognitions();
+                telemetry.addData("Recs", currentRecognitions);
+                telemetry.update();
 
-        }
+                if (currentRecognitions.size() != 0) {
+                    rotateForward(100, 1);
+                    telemetry.addData("test", "test");
 
-        telemetryTfod();
+                }
 
 
+                telemetryTfod();
 
-        // Push telemetry to the Driver Station.
-        telemetry.update();
 
+                // Push telemetry to the Driver Station.
+                telemetry.update();
+            }
 
             /*    // Save CPU resources; can resume streaming when needed.
                 if (gamepad1.dpad_down) {
@@ -96,6 +106,41 @@ public class autoexample extends LinearOpMode {
     /**
      * Initialize the TensorFlow Object Detection processor.
      */
+
+    public void rotateForward(int inches, double speed) {
+
+        if (opModeIsActive()) {
+            // Determine new target position, and pass to motor controller
+
+            // fetch motor positions
+            pos = motorTest.getCurrentPosition();
+
+            // calculate new targets
+            pos += (int) (inches*2);
+
+            // move robot to new position
+            motorTest.setTargetPosition(pos);
+
+
+            motorTest.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+
+            while (motorTest.isBusy()) {
+
+                motorTest.setPower(Math.abs(speed));
+
+            }
+
+            // Stop all motion;
+            motorTest.setPower(0);
+
+
+            // Turn off RUN_TO_POSITION
+            motorTest.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        }
+    }
+
     private void initTfod() {
 
         // Create the TensorFlow processor by using a builder.
