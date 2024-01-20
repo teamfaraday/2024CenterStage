@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.TeleOp;
+package Trash;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;

@@ -1,13 +1,13 @@
 
-package org.firstinspires.ftc.teamcode.Autonomous;
+package Trash;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 
-@Autonomous(name = "motorTester2Reverse")
-public class motorTester2Reverse extends LinearOpMode {
+@Autonomous(name = "motorTester2")
+public class motorTester2 extends LinearOpMode {
 
     DcMotor motorTest;
     DcMotor motorTestTwo;
@@ -45,7 +45,7 @@ public class motorTester2Reverse extends LinearOpMode {
         while (opModeIsActive() && stopped == false) {
             stopped = false;
 
-            rotateBackward(10000,5);
+            rotateForward(10000,5);
 
             stopped = true;
         }

@@ -1,5 +1,5 @@
 
-package org.firstinspires.ftc.teamcode.Autonomous;
+package Trash;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -38,9 +38,8 @@ public class servoTester extends LinearOpMode {
         while (opModeIsActive() && stopped == false) {
             stopped = false;
 
-            servo(1);
+            servo(0);
 
-            stopped = true;
         }
 
 

@@ -67,7 +67,7 @@ public class autoexample extends LinearOpMode {
 
 
         //if (opModeIsActive()) {
-            while (opModeIsActive()) {
+            //while (opModeIsActive()) {
 
                 List<Recognition> currentRecognitions = tfod.getRecognitions();
                 currentRecognitions = tfod.getRecognitions();
@@ -77,6 +77,7 @@ public class autoexample extends LinearOpMode {
                 if (currentRecognitions.size() != 0) {
                     rotateForward(100, 1);
                     telemetry.addData("test", "test");
+                    telemetry.update();
 
                 }
 
@@ -86,7 +87,7 @@ public class autoexample extends LinearOpMode {
 
                 // Push telemetry to the Driver Station.
                 telemetry.update();
-            }
+    }
 
             /*    // Save CPU resources; can resume streaming when needed.
                 if (gamepad1.dpad_down) {
@@ -101,7 +102,7 @@ public class autoexample extends LinearOpMode {
        /*  Save more CPU resources when camera is no longer needed.
         visionPortal.close();*/
 
-    }   // end runOpMode()
+  //  }   // end runOpMode()
 
     /**
      * Initialize the TensorFlow Object Detection processor.
@@ -124,10 +125,11 @@ public class autoexample extends LinearOpMode {
 
             motorTest.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
+            motorTest.setPower(speed);
 
             while (motorTest.isBusy()) {
 
-                motorTest.setPower(Math.abs(speed));
+
 
             }
 
@@ -137,6 +139,8 @@ public class autoexample extends LinearOpMode {
 
             // Turn off RUN_TO_POSITION
             motorTest.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+
 
         }
     }
@@ -169,7 +173,7 @@ public class autoexample extends LinearOpMode {
 
         // Set the camera (webcam vs. built-in RC phone camera).
         if (USE_WEBCAM) {
-            builder.setCamera(hardwareMap.get(WebcamName.class, "webcam"));
+            builder.setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"));
         } else {
             builder.setCamera(BuiltinCameraDirection.BACK);
         }
