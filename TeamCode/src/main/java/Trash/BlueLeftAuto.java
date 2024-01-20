@@ -1,6 +1,6 @@
 //btw the numbers stand for which spike mark its on, starting from the left and working clockwise. The left and right is from the drivers perspective
 
-package org.firstinspires.ftc.teamcode.Autonomous;
+package Trash;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;

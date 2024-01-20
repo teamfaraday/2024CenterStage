@@ -38,22 +38,59 @@ public class autoexample extends LinearOpMode {
      */
     private VisionPortal visionPortal;
 
-    DcMotor motorTest;
+    public DcMotor fL;
+    public DcMotor fR;
+    public DcMotor bL;
+    public DcMotor bR;
+    public DcMotor leftSlide;
+    public DcMotor rightSlide;
+    public DcMotor actuator;
+    public DcMotor intake;
+    public Servo drone;
+    public Servo rotate;
+   // public Servo pixel;
 
+    public boolean stopped = false;
     public int pos;
+
+    public int lfPos;
+    public int rfPos;
+    public int lbPos;
+    public int rbPos;
+
+    static final int tpi = 50; //length ratio, these is a value from last year, so it'll prob need to be tweaked
+    static final double lr = 0.8535; //length ratio, these is a value from last year, so it'll prob need to be tweaked
+    static final double dr = 4; //degree ratio, value needs to be tested & tweaked
+    static final double nerf = 0.6;
 
 
     @Override
     public void runOpMode() {
 
-        motorTest = hardwareMap.get(DcMotor.class, "slide"); //insert name here
+        fL = hardwareMap.get(DcMotor.class, "frontLeft");
+        fR = hardwareMap.get(DcMotor.class, "frontRight");
+        bL = hardwareMap.get(DcMotor.class, "backLeft");
+        bR = hardwareMap.get(DcMotor.class, "backRight");
+        leftSlide = hardwareMap.get(DcMotor.class, "leftSlide");
+        rightSlide = hardwareMap.get(DcMotor.class, "rightSlide");
+        actuator = hardwareMap.get(DcMotor.class, "actuator");
+        intake = hardwareMap.get(DcMotor.class, "intake");
+        drone = hardwareMap.get(Servo.class, "drone");
+        rotate = hardwareMap.get(Servo.class, "rotate");
+        //pixel = hardwareMap.get(Servo.class, "pixel");
 
-        motorTest.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        fL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        fR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        bL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        bR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        actuator.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
-        motorTest.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        motorTest.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        fR.setDirection(DcMotor.Direction.REVERSE);
+        bR.setDirection(DcMotor.Direction.REVERSE);
 
         initTfod();
 
@@ -61,25 +98,43 @@ public class autoexample extends LinearOpMode {
         telemetry.addData("DS preview on/off", "3 dots, Camera Stream");
         telemetry.addData(">", "Touch Play to start OpMode");
         telemetry.update();
+
+        while (opModeInInit()) { telemetryTfod();}
+
         waitForStart();
 
+        sleep(3000);
 
 
+        forward(5,0.8);
 
-        //if (opModeIsActive()) {
-            //while (opModeIsActive()) {
+        List<Recognition> currentRecognitions = tfod.getRecognitions();
+        currentRecognitions = tfod.getRecognitions();
+        telemetry.addData("Recs", currentRecognitions);
+        telemetry.update();
 
-                List<Recognition> currentRecognitions = tfod.getRecognitions();
-                currentRecognitions = tfod.getRecognitions();
-                telemetry.addData("Recs", currentRecognitions);
-                telemetry.update();
+        if (currentRecognitions.size() != 0 && !stopped) {
+            stopped = false;
+            forward(20, 0.8);
+            stopped = true;
 
-                if (currentRecognitions.size() != 0) {
-                    rotateForward(100, 1);
-                    telemetry.addData("test", "test");
-                    telemetry.update();
+        }
+        else {
+            counterClockwise(90,0.6);
+            forward(10, 0.2);
+            clockwise(90,0.6);
 
-                }
+            currentRecognitions = tfod.getRecognitions();
+            telemetry.addData("Recs", currentRecognitions);
+            telemetry.update();
+            if (currentRecognitions.size() != 0 && !stopped) {
+                forward(10,1);
+            }
+            else {
+                forward(5,1);
+                clockwise(90,1);
+            }
+        }
 
 
                 telemetryTfod();
@@ -108,40 +163,373 @@ public class autoexample extends LinearOpMode {
      * Initialize the TensorFlow Object Detection processor.
      */
 
-    public void rotateForward(int inches, double speed) {
+
+    public void pixel(double value) {
+      //  pixel.setPosition(value); // test out later
+    }
+
+
+
+    public void intake(int degrees, double speed) {
 
         if (opModeIsActive()) {
             // Determine new target position, and pass to motor controller
 
             // fetch motor positions
-            pos = motorTest.getCurrentPosition();
+            pos = intake.getCurrentPosition();
+
 
             // calculate new targets
-            pos += (int) (inches*2);
+            pos += (int) (degrees * dr);
+
 
             // move robot to new position
-            motorTest.setTargetPosition(pos);
+            intake.setTargetPosition(pos);
 
 
-            motorTest.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            intake.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-            motorTest.setPower(speed);
 
-            while (motorTest.isBusy()) {
+            intake.setPower(Math.abs(speed));
+
+
+
+            while (intake.isBusy()) {
 
 
 
             }
 
             // Stop all motion;
-            motorTest.setPower(0);
-
+            intake.setPower(0);
 
             // Turn off RUN_TO_POSITION
-            motorTest.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
+    }
+
+
+    public void clockwise(int degrees, double speed) {
+
+        if (opModeIsActive()) {
+            // Determine new target position, and pass to motor controller
+
+            // fetch motor positions
+            lfPos = fL.getCurrentPosition();
+            rfPos = fR.getCurrentPosition();
+            lbPos = bL.getCurrentPosition();
+            rbPos = bR.getCurrentPosition();
+
+            // calculate new targets
+            lfPos -= (int) (degrees * dr);
+            rfPos += (int) (degrees * dr);
+            lbPos -= (int) (degrees * dr);
+            rbPos += (int) (degrees * dr);
+
+            // move robot to new position
+            fL.setTargetPosition(lfPos);
+            fR.setTargetPosition(rfPos);
+            bL.setTargetPosition(lbPos);
+            bR.setTargetPosition(rbPos);
+
+            fL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            fR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            bL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            bR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            fL.setPower(Math.abs(speed * nerf * nerf));
+            fR.setPower(Math.abs(speed * nerf));
+            bL.setPower(Math.abs(speed * nerf));
+            bR.setPower(Math.abs(speed));
+
+
+            while (fL.isBusy() && fR.isBusy() && bL.isBusy() && bR.isBusy()) {
 
 
 
+            }
+
+            // Stop all motion;
+            fL.setPower(0);
+            fR.setPower(0);
+            bL.setPower(0);
+            bR.setPower(0);
+
+            // Turn off RUN_TO_POSITION
+            fL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            fR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            bL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            bR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
+    }
+
+    public void counterClockwise(int degrees, double speed) {
+
+        if (opModeIsActive()) {
+            // Determine new target position, and pass to motor controller
+
+            // fetch motor positions
+            lfPos = fL.getCurrentPosition();
+            rfPos = fR.getCurrentPosition();
+            lbPos = bL.getCurrentPosition();
+            rbPos = bR.getCurrentPosition();
+
+            // calculate new targets
+            lfPos += (int) (degrees * dr);
+            rfPos -= (int) (degrees * dr);
+            lbPos += (int) (degrees * dr);
+            rbPos -= (int) (degrees * dr);
+
+
+            // move robot to new position
+            fL.setTargetPosition(lfPos);
+            fR.setTargetPosition(rfPos);
+            bL.setTargetPosition(lbPos);
+            bR.setTargetPosition(rbPos);
+
+            fL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            fR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            bL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            bR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            fL.setPower(Math.abs(speed * nerf));
+            fR.setPower(Math.abs(speed * nerf));
+            bL.setPower(Math.abs(speed * nerf));
+            bR.setPower(Math.abs(speed));
+
+
+            while (fL.isBusy() && fR.isBusy() && bL.isBusy() && bR.isBusy()) {
+
+
+
+            }
+
+            // Stop all motion;
+            fL.setPower(0);
+            fR.setPower(0);
+            bL.setPower(0);
+            bR.setPower(0);
+
+            // Turn off RUN_TO_POSITION
+            fL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            fR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            bL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            bR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
+    }
+
+    public void forward(int inches, double speed) {
+
+        if (opModeIsActive()) {
+            // Determine new target position, and pass to motor controller
+
+            // fetch motor positions
+            lfPos = fL.getCurrentPosition();
+            rfPos = fR.getCurrentPosition();
+            lbPos = bL.getCurrentPosition();
+            rbPos = bR.getCurrentPosition();
+
+            // calculate new targets
+            lfPos -= (int) (inches * tpi * lr);
+            rfPos -= (int) (inches * tpi * lr);
+            lbPos -= (int) (inches * tpi * lr);
+            rbPos -= (int) (inches * tpi * lr);
+
+            // move robot to new position
+            fL.setTargetPosition(lfPos);
+            fR.setTargetPosition(rfPos);
+            bL.setTargetPosition(lbPos);
+            bR.setTargetPosition(rbPos);
+
+            fL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            fR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            bL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            bR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+
+            fL.setPower(Math.abs(speed * nerf));
+            fR.setPower(Math.abs(speed * nerf));
+            bL.setPower(Math.abs(speed * nerf));
+            bR.setPower(Math.abs(speed));
+
+            while (fL.isBusy() && fR.isBusy() && bL.isBusy() && bR.isBusy()) {
+
+
+
+            }
+
+            // Stop all motion;
+            fL.setPower(0);
+            fR.setPower(0);
+            bL.setPower(0);
+            bR.setPower(0);
+
+            // Turn off RUN_TO_POSITION
+            fL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            fR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            bL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            bR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
+    }
+
+    public void backward(int inches, double speed) {
+
+        if (opModeIsActive()) {
+            // Determine new target position, and pass to motor controller
+
+            // fetch motor positions
+            lfPos = fL.getCurrentPosition();
+            rfPos = fR.getCurrentPosition();
+            lbPos = bL.getCurrentPosition();
+            rbPos = bR.getCurrentPosition();
+
+            // calculate new targets
+            lfPos = (int) (inches * tpi * lr);
+            rfPos = (int) (inches * tpi * lr);
+            lbPos = (int) (inches * tpi * lr);
+            rbPos = (int) (inches * tpi * lr);
+
+            // move robot to new position
+            fL.setTargetPosition(lfPos);
+            fR.setTargetPosition(rfPos);
+            bL.setTargetPosition(lbPos);
+            bR.setTargetPosition(rbPos);
+
+            fL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            fR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            bL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            bR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            fL.setPower(Math.abs(speed * nerf));
+            fR.setPower(Math.abs(speed * nerf));
+            bL.setPower(Math.abs(speed * nerf));
+            bR.setPower(Math.abs(speed));
+
+            while (fL.isBusy() && fR.isBusy() && bL.isBusy() && bR.isBusy()) {
+
+
+
+            }
+
+            // Stop all motion;
+            fL.setPower(0);
+            fR.setPower(0);
+            bL.setPower(0);
+            bR.setPower(0);
+
+            // Turn off RUN_TO_POSITION
+            fL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            fR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            bL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            bR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
+    }
+
+    public void right(int inches, double speed) {
+
+        if (opModeIsActive()) {
+            // Determine new target position, and pass to motor controller
+
+            // fetch motor positions
+            lfPos = fL.getCurrentPosition();
+            rfPos = fR.getCurrentPosition();
+            lbPos = bL.getCurrentPosition();
+            rbPos = bR.getCurrentPosition();
+
+            // calculate new targets
+            lfPos -= (int) (inches * tpi * lr);
+            rfPos += (int) (inches * tpi * lr);
+            lbPos += (int) (inches * tpi * lr);
+            rbPos -= (int) (inches * tpi * lr);
+
+            // move robot to new position
+            fL.setTargetPosition(lfPos);
+            fR.setTargetPosition(rfPos);
+            bL.setTargetPosition(lbPos);
+            bR.setTargetPosition(rbPos);
+
+            fL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            fR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            bL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            bR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+
+            fL.setPower(Math.abs(speed * nerf));
+            fR.setPower(Math.abs(speed * nerf));
+            bL.setPower(Math.abs(speed));
+            bR.setPower(Math.abs(speed));
+
+            while (fL.isBusy() && fR.isBusy() && bL.isBusy() && bR.isBusy()) {
+
+
+
+            }
+
+            // Stop all motion;
+            fL.setPower(0);
+            fR.setPower(0);
+            bL.setPower(0);
+            bR.setPower(0);
+
+            // Turn off RUN_TO_POSITION
+            fL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            fR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            bL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            bR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
+    }
+
+    public void left(int inches, double speed) {
+
+        if (opModeIsActive()) {
+            // Determine new target position, and pass to motor controller
+
+            // fetch motor positions
+            lfPos = fL.getCurrentPosition();
+            rfPos = fR.getCurrentPosition();
+            lbPos = bL.getCurrentPosition();
+            rbPos = bR.getCurrentPosition();
+
+            // calculate new targets
+            lfPos += (int) (inches * tpi * lr);
+            rfPos -= (int) (inches * tpi * lr);
+            lbPos -= (int) (inches * tpi * lr);
+            rbPos += (int) (inches * tpi * lr);
+
+            // move robot to new position
+            fL.setTargetPosition(lfPos);
+            fR.setTargetPosition(rfPos);
+            bL.setTargetPosition(lbPos);
+            bR.setTargetPosition(rbPos);
+
+            fL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            fR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            bL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            bR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+
+            fL.setPower(Math.abs(speed * nerf));
+            fR.setPower(Math.abs(speed * nerf));
+            bL.setPower(Math.abs(speed * nerf));
+            bR.setPower(Math.abs(speed));
+
+            while (fL.isBusy() && fR.isBusy() && bL.isBusy() && bR.isBusy()) {
+
+
+
+            }
+
+            // Stop all motion;
+            fL.setPower(0);
+            fR.setPower(0);
+            bL.setPower(0);
+            bR.setPower(0);
+
+            // Turn off RUN_TO_POSITION
+            fL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            fR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            bL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            bR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
     }
 
@@ -227,557 +615,5 @@ public class autoexample extends LinearOpMode {
 
     }   // end method telemetryTfod()
 
-    /*
-    public void forward(int inches, double speed) {
 
-        if (opModeIsActive()) {
-            // Determine new target position, and pass to motor controller
-
-            // fetch motor positions
-            lfPos = frontLeft.getCurrentPosition();
-            rfPos = frontRight.getCurrentPosition();
-            lbPos = backLeft.getCurrentPosition();
-            rbPos = backRight.getCurrentPosition();
-
-            // calculate new targets
-            lfPos -= (int) (inches * tpi * lr);
-            rfPos -= (int) (inches * tpi * lr);
-            lbPos -= (int) (inches * tpi * lr);
-            rbPos -= (int) (inches * tpi * lr);
-
-            // move robot to new position
-            frontLeft.setTargetPosition(lfPos);
-            frontRight.setTargetPosition(rfPos);
-            backLeft.setTargetPosition(lbPos);
-            backRight.setTargetPosition(rbPos);
-
-            frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-
-            while (frontLeft.isBusy() && frontRight.isBusy() && backLeft.isBusy() && backRight.isBusy()) {
-
-                frontLeft.setPower(Math.abs(speed));
-                frontRight.setPower(Math.abs(speed));
-                backLeft.setPower(Math.abs(speed));
-                backRight.setPower(Math.abs(speed));
-
-            }
-
-            // Stop all motion;
-            frontLeft.setPower(0);
-            frontRight.setPower(0);
-            backLeft.setPower(0);
-            backRight.setPower(0);
-
-            // Turn off RUN_TO_POSITION
-            frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        }
-    }
-
-    public void backward(int inches, double speed) {
-
-        if (opModeIsActive()) {
-            // Determine new target position, and pass to motor controller
-
-            // fetch motor positions
-            lfPos = frontLeft.getCurrentPosition();
-            rfPos = frontRight.getCurrentPosition();
-            lbPos = backLeft.getCurrentPosition();
-            rbPos = backRight.getCurrentPosition();
-
-            // calculate new targets
-            lfPos -= (int) (inches * tpi * lr);
-            rfPos -= (int) (inches * tpi * lr);
-            lbPos -= (int) (inches * tpi * lr);
-            rbPos -= (int) (inches * tpi * lr);
-
-            // move robot to new position
-            frontLeft.setTargetPosition(lfPos);
-            frontRight.setTargetPosition(rfPos);
-            backLeft.setTargetPosition(lbPos);
-            backRight.setTargetPosition(rbPos);
-
-            frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-
-            while (frontLeft.isBusy() && frontRight.isBusy() && backLeft.isBusy() && backRight.isBusy()) {
-
-                frontLeft.setPower(Math.abs(speed));
-                frontRight.setPower(Math.abs(speed));
-                backLeft.setPower(Math.abs(speed));
-                backRight.setPower(Math.abs(speed));
-
-            }
-
-            // Stop all motion;
-            frontLeft.setPower(0);
-            frontRight.setPower(0);
-            backLeft.setPower(0);
-            backRight.setPower(0);
-
-            // Turn off RUN_TO_POSITION
-            frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        }
-    }
-
-    public void left(int inches, double speed) {
-
-        if (opModeIsActive()) {
-            // Determine new target position, and pass to motor controller
-
-            // fetch motor positions
-            lfPos = frontLeft.getCurrentPosition();
-            rfPos = frontRight.getCurrentPosition();
-            lbPos = backLeft.getCurrentPosition();
-            rbPos = backRight.getCurrentPosition();
-
-            // calculate new targets
-            lfPos -= (int) (inches * tpi * lr);
-            rfPos += (int) (inches * tpi * lr);
-            lbPos += (int) (inches * tpi * lr);
-            rbPos -= (int) (inches * tpi * lr);
-
-            // move robot to new position
-            frontLeft.setTargetPosition(lfPos);
-            frontRight.setTargetPosition(rfPos);
-            backLeft.setTargetPosition(lbPos);
-            backRight.setTargetPosition(rbPos);
-
-            frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-
-            while (frontLeft.isBusy() && frontRight.isBusy() && backLeft.isBusy() && backRight.isBusy()) {
-
-                frontLeft.setPower(Math.abs(speed));
-                frontRight.setPower(Math.abs(speed));
-                backLeft.setPower(Math.abs(speed));
-                backRight.setPower(Math.abs(speed));
-
-            }
-
-            // Stop all motion;
-            frontLeft.setPower(0);
-            frontRight.setPower(0);
-            backLeft.setPower(0);
-            backRight.setPower(0);
-
-            // Turn off RUN_TO_POSITION
-            frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        }
-    }
-
-    public void right(int inches, double speed) {
-
-        if (opModeIsActive()) {
-            // Determine new target position, and pass to motor controller
-
-            // fetch motor positions
-            lfPos = frontLeft.getCurrentPosition();
-            rfPos = frontRight.getCurrentPosition();
-            lbPos = backLeft.getCurrentPosition();
-            rbPos = backRight.getCurrentPosition();
-
-            // calculate new targets
-            lfPos += (int) (inches * tpi * lr);
-            rfPos -= (int) (inches * tpi * lr);
-            lbPos -= (int) (inches * tpi * lr);
-            rbPos += (int) (inches * tpi * lr);
-
-            // move robot to new position
-            frontLeft.setTargetPosition(lfPos);
-            frontRight.setTargetPosition(rfPos);
-            backLeft.setTargetPosition(lbPos);
-            backRight.setTargetPosition(rbPos);
-
-            frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-
-            while (frontLeft.isBusy() && frontRight.isBusy() && backLeft.isBusy() && backRight.isBusy()) {
-
-                frontLeft.setPower(Math.abs(speed));
-                frontRight.setPower(Math.abs(speed));
-                backLeft.setPower(Math.abs(speed));
-                backRight.setPower(Math.abs(speed));
-
-            }
-
-            // Stop all motion;
-            frontLeft.setPower(0);
-            frontRight.setPower(0);
-            backLeft.setPower(0);
-            backRight.setPower(0);
-
-            // Turn off RUN_TO_POSITION
-            frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        }
-    }
-
-    public void armRotate(int degrees, double speed) {
-
-        if (opModeIsActive()) {
-            // Determine new target position, and pass to motor controller
-
-            // fetch motor positions
-            arPos = armRotate.getCurrentPosition();
-
-            // calculate new targets
-            arPos += (int) (degrees * dr);
-
-            // move robot to new position
-            armRotate.setTargetPosition(arPos);
-
-            armRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-
-            while (armRotate.isBusy()) {
-
-                armRotate.setPower(Math.abs(speed));
-
-            }
-
-            // Stop all motion;
-            armRotate.setPower(0);
-
-            // Turn off RUN_TO_POSITION
-            armRotate.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        }
-    }
-
-    public void armElevate(int degrees, double speed) {
-
-        if (opModeIsActive()) {
-            // Determine new target position, and pass to motor controller
-
-            // fetch motor positions
-            aePos = armElevate.getCurrentPosition();
-
-            // calculate new targets
-            aePos += (int) (degrees * dr);
-
-            // move robot to new position
-            armElevate.setTargetPosition(arPos);
-
-            armElevate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-
-            while (armElevate.isBusy()) {
-
-                armElevate.setPower(Math.abs(speed));
-
-            }
-
-            // Stop all motion;
-            armElevate.setPower(0);
-
-            // Turn off RUN_TO_POSITION
-            armElevate.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        }
-    }
-
-    public void claw(int position) {
-
-        if (opModeIsActive()) {
-            claw.setPosition(position);
-        }
-    }public void forward(int inches, double speed) {
-
-        if (opModeIsActive()) {
-            // Determine new target position, and pass to motor controller
-
-            // fetch motor positions
-            lfPos = frontLeft.getCurrentPosition();
-            rfPos = frontRight.getCurrentPosition();
-            lbPos = backLeft.getCurrentPosition();
-            rbPos = backRight.getCurrentPosition();
-
-            // calculate new targets
-            lfPos -= (int) (inches * tpi * lr);
-            rfPos -= (int) (inches * tpi * lr);
-            lbPos -= (int) (inches * tpi * lr);
-            rbPos -= (int) (inches * tpi * lr);
-
-            // move robot to new position
-            frontLeft.setTargetPosition(lfPos);
-            frontRight.setTargetPosition(rfPos);
-            backLeft.setTargetPosition(lbPos);
-            backRight.setTargetPosition(rbPos);
-
-            frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-
-            while (frontLeft.isBusy() && frontRight.isBusy() && backLeft.isBusy() && backRight.isBusy()) {
-
-                frontLeft.setPower(Math.abs(speed));
-                frontRight.setPower(Math.abs(speed));
-                backLeft.setPower(Math.abs(speed));
-                backRight.setPower(Math.abs(speed));
-
-            }
-
-            // Stop all motion;
-            frontLeft.setPower(0);
-            frontRight.setPower(0);
-            backLeft.setPower(0);
-            backRight.setPower(0);
-
-            // Turn off RUN_TO_POSITION
-            frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        }
-    }
-
-    public void backward(int inches, double speed) {
-
-        if (opModeIsActive()) {
-            // Determine new target position, and pass to motor controller
-
-            // fetch motor positions
-            lfPos = frontLeft.getCurrentPosition();
-            rfPos = frontRight.getCurrentPosition();
-            lbPos = backLeft.getCurrentPosition();
-            rbPos = backRight.getCurrentPosition();
-
-            // calculate new targets
-            lfPos -= (int) (inches * tpi * lr);
-            rfPos -= (int) (inches * tpi * lr);
-            lbPos -= (int) (inches * tpi * lr);
-            rbPos -= (int) (inches * tpi * lr);
-
-            // move robot to new position
-            frontLeft.setTargetPosition(lfPos);
-            frontRight.setTargetPosition(rfPos);
-            backLeft.setTargetPosition(lbPos);
-            backRight.setTargetPosition(rbPos);
-
-            frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-
-            while (frontLeft.isBusy() && frontRight.isBusy() && backLeft.isBusy() && backRight.isBusy()) {
-
-                frontLeft.setPower(Math.abs(speed));
-                frontRight.setPower(Math.abs(speed));
-                backLeft.setPower(Math.abs(speed));
-                backRight.setPower(Math.abs(speed));
-
-            }
-
-            // Stop all motion;
-            frontLeft.setPower(0);
-            frontRight.setPower(0);
-            backLeft.setPower(0);
-            backRight.setPower(0);
-
-            // Turn off RUN_TO_POSITION
-            frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        }
-    }
-
-    public void left(int inches, double speed) {
-
-        if (opModeIsActive()) {
-            // Determine new target position, and pass to motor controller
-
-            // fetch motor positions
-            lfPos = frontLeft.getCurrentPosition();
-            rfPos = frontRight.getCurrentPosition();
-            lbPos = backLeft.getCurrentPosition();
-            rbPos = backRight.getCurrentPosition();
-
-            // calculate new targets
-            lfPos -= (int) (inches * tpi * lr);
-            rfPos += (int) (inches * tpi * lr);
-            lbPos += (int) (inches * tpi * lr);
-            rbPos -= (int) (inches * tpi * lr);
-
-            // move robot to new position
-            frontLeft.setTargetPosition(lfPos);
-            frontRight.setTargetPosition(rfPos);
-            backLeft.setTargetPosition(lbPos);
-            backRight.setTargetPosition(rbPos);
-
-            frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-
-            while (frontLeft.isBusy() && frontRight.isBusy() && backLeft.isBusy() && backRight.isBusy()) {
-
-                frontLeft.setPower(Math.abs(speed));
-                frontRight.setPower(Math.abs(speed));
-                backLeft.setPower(Math.abs(speed));
-                backRight.setPower(Math.abs(speed));
-
-            }
-
-            // Stop all motion;
-            frontLeft.setPower(0);
-            frontRight.setPower(0);
-            backLeft.setPower(0);
-            backRight.setPower(0);
-
-            // Turn off RUN_TO_POSITION
-            frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        }
-    }
-
-    public void right(int inches, double speed) {
-
-        if (opModeIsActive()) {
-            // Determine new target position, and pass to motor controller
-
-            // fetch motor positions
-            lfPos = frontLeft.getCurrentPosition();
-            rfPos = frontRight.getCurrentPosition();
-            lbPos = backLeft.getCurrentPosition();
-            rbPos = backRight.getCurrentPosition();
-
-            // calculate new targets
-            lfPos += (int) (inches * tpi * lr);
-            rfPos -= (int) (inches * tpi * lr);
-            lbPos -= (int) (inches * tpi * lr);
-            rbPos += (int) (inches * tpi * lr);
-
-            // move robot to new position
-            frontLeft.setTargetPosition(lfPos);
-            frontRight.setTargetPosition(rfPos);
-            backLeft.setTargetPosition(lbPos);
-            backRight.setTargetPosition(rbPos);
-
-            frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-
-            while (frontLeft.isBusy() && frontRight.isBusy() && backLeft.isBusy() && backRight.isBusy()) {
-
-                frontLeft.setPower(Math.abs(speed));
-                frontRight.setPower(Math.abs(speed));
-                backLeft.setPower(Math.abs(speed));
-                backRight.setPower(Math.abs(speed));
-
-            }
-
-            // Stop all motion;
-            frontLeft.setPower(0);
-            frontRight.setPower(0);
-            backLeft.setPower(0);
-            backRight.setPower(0);
-
-            // Turn off RUN_TO_POSITION
-            frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        }
-    }
-
-    public void armRotate(int degrees, double speed) {
-
-        if (opModeIsActive()) {
-            // Determine new target position, and pass to motor controller
-
-            // fetch motor positions
-            arPos = armRotate.getCurrentPosition();
-
-            // calculate new targets
-            arPos += (int) (degrees * dr);
-
-            // move robot to new position
-            armRotate.setTargetPosition(arPos);
-
-            armRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-
-            while (armRotate.isBusy()) {
-
-                armRotate.setPower(Math.abs(speed));
-
-            }
-
-            // Stop all motion;
-            armRotate.setPower(0);
-
-            // Turn off RUN_TO_POSITION
-            armRotate.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        }
-    }
-
-    public void armElevate(int degrees, double speed) {
-
-        if (opModeIsActive()) {
-            // Determine new target position, and pass to motor controller
-
-            // fetch motor positions
-            aePos = armElevate.getCurrentPosition();
-
-            // calculate new targets
-            aePos += (int) (degrees * dr);
-
-            // move robot to new position
-            armElevate.setTargetPosition(arPos);
-
-            armElevate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-
-            while (armElevate.isBusy()) {
-
-                armElevate.setPower(Math.abs(speed));
-
-            }
-
-            // Stop all motion;
-            armElevate.setPower(0);
-
-            // Turn off RUN_TO_POSITION
-            armElevate.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        }
-    }
-
-    public void claw(int position) {
-
-        if (opModeIsActive()) {
-            claw.setPosition(position);
-        }
-    }*/
-
-}   // end class
+}

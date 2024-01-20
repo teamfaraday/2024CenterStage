@@ -88,18 +88,29 @@ public class TeleOp extends OpMode {
 
         telemetry.update();
 
+
+        /*
+        GP 1:
+            Movement
+            Intake
+            Drone
+
+        GP 2:
+            Slides
+            Hang
+            Outtake
+
+         */
+
         //slides
 
-        if (gamepad1.right_bumper){
+        if (gamepad2.right_bumper){
             rightSlide.setPower(-1); //up
-            leftSlide.setPower(0.93);
-        } else if (!gamepad1.right_bumper) {
-            rightSlide.setPower(0);
-            leftSlide.setPower(0);
+        } else if (!gamepad2.right_bumper) {
+            rightSlide.setPower(-0.1);
         }
-        if (gamepad1.left_bumper) {
-            rightSlide.setPower(1); //down
-            leftSlide.setPower(-0.85);
+        if (gamepad2.left_bumper) {
+            rightSlide.setPower(0.9); //down
         }
 
 
@@ -109,6 +120,9 @@ public class TeleOp extends OpMode {
         } else if (!gamepad1.a){
             intake.setPower(0);
         }
+        if (gamepad1.y) {
+            intake.setPower(-100);
+        }
 
 
 
@@ -116,34 +130,38 @@ public class TeleOp extends OpMode {
 
         //Hanging
         // Up
-        if (gamepad1.dpad_up) {
+        if (gamepad2.dpad_up) {
             actuator.setPower(0.8);
-        } else if (!gamepad1.dpad_up) {
+        } else if (!gamepad2.dpad_up) {
             actuator.setPower(0);
         }
         //Down
-        if (gamepad1.dpad_down) {
+        if (gamepad2.dpad_down) {
             actuator.setPower(-0.8);
         }
+
+        //drone
 
         if (gamepad1.left_trigger > 0.8 && gamepad1.right_trigger > 0.8){
             drone.setPosition(0);
         }
 
-        if (gamepad1.x){
+        //outtake
+
+        if (gamepad2.x){
             rotate.setDirection(Servo.Direction.FORWARD);
-            rotate.setPosition(0.75);
+            rotate.setPosition(0.97);
 
         }
 
-        if (gamepad1.y){
-            rotate.setDirection(Servo.Direction.REVERSE);
-            rotate.setPosition(0.84);
-        }
-
-        if (gamepad1.b) {
+        /*if (gamepad2.y){
             rotate.setDirection(Servo.Direction.FORWARD);
-            rotate.setPosition(0.25);
+            rotate.setPosition(0.16);
+        }*/
+
+        if (gamepad2.b) {
+            rotate.setDirection(Servo.Direction.FORWARD);
+            rotate.setPosition(0.6);
         }
 
     }
