@@ -4,6 +4,7 @@ package Trash;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 
 @Autonomous(name = "motorTester2Reverse")
@@ -37,6 +38,8 @@ public class motorTester2Reverse extends LinearOpMode {
 
         motorTest.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motorTestTwo.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        motorTestTwo.setDirection(DcMotor.Direction.REVERSE);
 
 
         waitForStart();

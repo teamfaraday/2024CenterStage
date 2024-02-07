@@ -16,10 +16,10 @@ public class TeleOp extends OpMode {
     public DcMotor fR;
     public DcMotor bL;
     public DcMotor bR;
-    public DcMotor leftSlide;
-    public DcMotor rightSlide;
+    public DcMotor slide;
     public DcMotor actuator;
-    public DcMotor intake;
+    public DcMotor intakeL;
+    public DcMotor intakeR;
     public Servo drone;
     public Servo rotate;
     public static final double MOTOR_MULTIPLIER = 0.75;
@@ -36,10 +36,10 @@ public class TeleOp extends OpMode {
         fR = hardwareMap.get(DcMotor.class, "frontRight");
         bL = hardwareMap.get(DcMotor.class, "backLeft");
         bR = hardwareMap.get(DcMotor.class, "backRight");
-        leftSlide = hardwareMap.get(DcMotor.class, "leftSlide");
-        rightSlide = hardwareMap.get(DcMotor.class, "rightSlide");
+        slide = hardwareMap.get(DcMotor.class, "slide");
         actuator = hardwareMap.get(DcMotor.class, "actuator");
-        intake = hardwareMap.get(DcMotor.class, "intake");
+        intakeL = hardwareMap.get(DcMotor.class, "intakeL");
+        intakeR = hardwareMap.get(DcMotor.class, "intakeR");
         drone = hardwareMap.get(Servo.class, "drone");
         rotate = hardwareMap.get(Servo.class, "rotate");
 
@@ -47,16 +47,15 @@ public class TeleOp extends OpMode {
         fR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         bL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         bR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        leftSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        slide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         actuator.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        intakeL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        intakeR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
         fR.setDirection(DcMotor.Direction.REVERSE);
         bR.setDirection(DcMotor.Direction.REVERSE);
-
-
+        intakeR.setDirection(DcMotor.Direction.REVERSE);
 
     }
 
@@ -105,28 +104,27 @@ public class TeleOp extends OpMode {
         //slides
 
         if (gamepad2.right_bumper){
-            rightSlide.setPower(-1); //up
+            slide.setPower(-1); //up
         } else if (!gamepad2.right_bumper) {
-            rightSlide.setPower(-0.1);
+            slide.setPower(-0.1);
         }
         if (gamepad2.left_bumper) {
-            rightSlide.setPower(0.9); //down
+            slide.setPower(0.9); //down
         }
 
 
-        //intake
+
         if (gamepad1.a) {
-            intake.setPower(100);
+            intakeL.setPower(100);
+            intakeR.setPower(100);
         } else if (!gamepad1.a){
-            intake.setPower(0);
+            intakeL.setPower(0);
+            intakeR.setPower(0);
         }
         if (gamepad1.y) {
-            intake.setPower(-100);
+            intakeL.setPower(-100);
+            intakeR.setPower(-100);
         }
-
-
-
-
 
         //Hanging
         // Up
@@ -150,14 +148,14 @@ public class TeleOp extends OpMode {
 
         if (gamepad2.x){
             rotate.setDirection(Servo.Direction.FORWARD);
-            rotate.setPosition(0.97);
+            rotate.setPosition(0.95);
 
         }
 
-        /*if (gamepad2.y){
+        if (gamepad2.a){
             rotate.setDirection(Servo.Direction.FORWARD);
-            rotate.setPosition(0.16);
-        }*/
+            rotate.setPosition(0.8);
+        }
 
         if (gamepad2.b) {
             rotate.setDirection(Servo.Direction.FORWARD);
