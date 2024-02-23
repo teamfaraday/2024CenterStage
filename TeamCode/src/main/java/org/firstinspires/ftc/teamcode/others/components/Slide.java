@@ -7,10 +7,10 @@ public class Slide {
 
     public double slidePower = 1;
     public double antiGravPower = -0.1;
-
-    DcMotor slide;
-
     public int posSlide;
+
+    public DcMotor slide;
+
 
     public Slide(HardwareMap hardwareMap) {
         slide = hardwareMap.dcMotor.get("slide");

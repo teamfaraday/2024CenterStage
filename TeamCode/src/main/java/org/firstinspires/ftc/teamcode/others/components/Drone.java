@@ -5,10 +5,10 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class Drone {
 
-    Servo drone;
-
     public double initpos = 0;
     public double launchpos = 1;
+
+    public Servo drone;
 
     public Drone(HardwareMap hardwareMap) {
         drone = hardwareMap.servo.get("drone");

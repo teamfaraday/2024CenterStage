@@ -7,7 +7,8 @@ public class Hang {
 
     public double hangPower;
 
-    DcMotor hang;
+    public DcMotor hang;
+
     public Hang(HardwareMap hardwareMap) {
         hang = hardwareMap.dcMotor.get("hang");
         hang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

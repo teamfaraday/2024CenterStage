@@ -8,8 +8,8 @@ public class Intake {
 
     public double intakePower = 1;
 
-    DcMotor intake1;
-    CRServo intake2;
+    public DcMotor intake1;
+    public CRServo intake2;
 
     public Intake(HardwareMap hardwareMap) {
         intake1 = hardwareMap.dcMotor.get("intake1");
