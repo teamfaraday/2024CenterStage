@@ -38,7 +38,6 @@ public class autoexample extends LinearOpModePlusConstants {
         telemetry.update();
 
         if (currentRecognitions.size() != 0 && !stopped) {
-            stopped = false;
             stopped = true;
 
         }
