@@ -6,28 +6,34 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class Intake {
 
-    public double intakePower = 1;
+    public double intakeAPower = 0.544;
+    public double intakeBPower = 1;
 
-    public DcMotor intake1;
-    public CRServo intake2;
+    public DcMotor intakeA;
+    public CRServo intakeB1;
+    public CRServo intakeB2;
 
     public Intake(HardwareMap hardwareMap) {
-        intake1 = hardwareMap.dcMotor.get("intake1");
-        intake2 = hardwareMap.crservo.get("intake2");
-        intake1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        intake2.setDirection(CRServo.Direction.REVERSE);
+        intakeA = hardwareMap.dcMotor.get("intakeA");
+        intakeB1 = hardwareMap.crservo.get("intakeB1");
+        intakeB2 = hardwareMap.crservo.get("intakeB2");
+        intakeA.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        intakeB2.setDirection(CRServo.Direction.REVERSE);
     }
 
-    public void activate() {
-        intake1.setPower(intakePower);
-        intake2.setPower(intakePower);
+    public void activate(double nerf) {
+        intakeA.setPower(intakeAPower);
+        intakeB1.setPower(intakeBPower);
+        intakeB2.setPower(intakeBPower);
     }
     public void deactivate() {
-        intake1.setPower(0);
-        intake2.setPower(0);
+        intakeA.setPower(0);
+        intakeB1.setPower(0);
+        intakeB2.setPower(0);
     }
-    public void reverse() {
-        intake1.setPower(-intakePower);
-        intake2.setPower(-intakePower);
+    public void reverse(double nerf) {
+        intakeA.setPower(-intakeAPower);
+        intakeB1.setPower(-intakeBPower);
+        intakeB2.setPower(-intakeBPower);
     }
 }
