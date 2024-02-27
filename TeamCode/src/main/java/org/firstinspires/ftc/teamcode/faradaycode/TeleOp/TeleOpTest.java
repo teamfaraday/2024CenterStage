@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.faradaycode.TeleOp;
 import org.firstinspires.ftc.teamcode.faradaycode.LinearOpModePlusConstants;
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="TeleIsOppingTest")
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOpTest")
 public class TeleOpTest extends LinearOpModePlusConstants {
     //vars if needed
 
@@ -11,7 +11,7 @@ public class TeleOpTest extends LinearOpModePlusConstants {
 
         //public void start() {
         drone.init();
-        bannerBox.intakePos(); //}
+        bannerBox.intakePos();
 
         //public void loop()
         while (opModeIsActive() && !stopped){

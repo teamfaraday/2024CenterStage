@@ -20,7 +20,7 @@ public class autoexample extends LinearOpModePlusConstants {
         waitForStart();
         sleep(3000);
 
-        //acutal auto
+        //actual auto
         List<Recognition> currentRecognitions = tfod.getRecognitions();
         currentRecognitions = tfod.getRecognitions();
         if (currentRecognitions.size() != 0 && !stopped) {

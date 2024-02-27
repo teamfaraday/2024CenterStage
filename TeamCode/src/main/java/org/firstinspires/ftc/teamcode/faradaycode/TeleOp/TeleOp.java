@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.faradaycode.components.Drone;
 import org.firstinspires.ftc.teamcode.faradaycode.components.DriveTrain.DriveTrainTeleOp;
 import org.firstinspires.ftc.teamcode.faradaycode.components.BannerBox;
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="TeleIsOpping")
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleIsOpping")
 public class TeleOp extends OpMode {
 
     public Hang hang;
