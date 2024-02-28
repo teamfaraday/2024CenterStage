@@ -5,8 +5,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class Drone {
 
-    public double initpos = 0;
-    public double launchpos = 1;
+    public double initPos = 0;
+    public double launchPos = 1;
 
     public Servo drone;
 
@@ -15,9 +15,9 @@ public class Drone {
     }
 
     public void init() {
-        drone.setPosition(initpos);
+        drone.setPosition(initPos);
     }
     public void launch() {
-        drone.setPosition(launchpos);
+        drone.setPosition(launchPos);
     }
 }

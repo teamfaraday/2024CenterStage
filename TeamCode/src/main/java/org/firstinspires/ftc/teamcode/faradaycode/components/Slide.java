@@ -9,6 +9,7 @@ public class Slide {
     public double slidePower = 1;
     public double antiGravPower = 0.1;
     public double slowConst = 0.45;
+    public double slowSlidePower = -0.1;
     public double posSlide;
 
     public DcMotor slide;
@@ -24,7 +25,7 @@ public class Slide {
         slide2.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
-    public void up(boolean isSlow) {
+    public void up(boolean isSlow, double nerf) {
         if (!isSlow) {
             slide.setPower(slidePower);
             slide2.setPower(slidePower);
@@ -33,7 +34,7 @@ public class Slide {
             slide2.setPower(slidePower * slowConst);
         }
     }
-    public void down(boolean isSlow) {
+    public void down(boolean isSlow, double nerf) {
         if (!isSlow) {
             slide.setPower(-slidePower);
             slide2.setPower(-slidePower);
@@ -41,6 +42,10 @@ public class Slide {
             slide.setPower(-slidePower * slowConst * 0.6);
             slide2.setPower(-slidePower * slowConst * 0.6);
         }
+    }
+    public void slowDown() {
+        slide.setPower(slowSlidePower);
+        slide2.setPower(slowSlidePower);
     }
     public void antiGrav() {
         slide.setPower(antiGravPower);

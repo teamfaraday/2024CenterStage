@@ -1,14 +1,6 @@
 package org.firstinspires.ftc.teamcode.faradaycode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
-import org.firstinspires.ftc.vision.VisionPortal;
-import org.firstinspires.ftc.vision.tfod.TfodProcessor;
-
-import java.util.List;
-
 import org.firstinspires.ftc.teamcode.faradaycode.components.Hang;
 import org.firstinspires.ftc.teamcode.faradaycode.components.Intake;
 import org.firstinspires.ftc.teamcode.faradaycode.components.Slide;
@@ -16,11 +8,35 @@ import org.firstinspires.ftc.teamcode.faradaycode.components.Drone;
 import org.firstinspires.ftc.teamcode.faradaycode.components.DriveTrain.DriveTrainAuto;
 import org.firstinspires.ftc.teamcode.faradaycode.components.DriveTrain.DriveTrainTeleOp;
 import org.firstinspires.ftc.teamcode.faradaycode.components.BannerBox;
+import org.firstinspires.ftc.teamcode.faradaycode.components.PurplePixel;
+import org.firstinspires.ftc.teamcode.faradaycode.components.tFod;
+
+
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class LinearOpModePlusConstants extends LinearOpMode{
-    protected static final boolean USE_WEBCAM = true;
-    protected TfodProcessor tfod;
-    protected VisionPortal visionPortal;
+    /*
+    Control Hub
+        Motors
+            0: backLeft
+            1: frontLeft
+            2: slide2
+            3: hang
+        Servos
+            0: drone
+            1: purplePixel
+    Expansion Hub
+        Motors
+            0: intakeA
+            1: slide
+            2: frontRight
+            3: backRight
+        Servos
+            0: release
+            1: intakeB1
+            2: intakeB2
+            3: rotate1
+            4: rotate2 */
 
     public Hang hang;
     public Intake intake;
@@ -29,19 +45,14 @@ public class LinearOpModePlusConstants extends LinearOpMode{
     public DriveTrainAuto driveTrainAuto;
     public DriveTrainTeleOp driveTrainTeleOp;
     public BannerBox bannerBox;
+    public PurplePixel purplePixel;
 
-    private static final String BLUE_TFOD_MODEL_ASSET = "bb.tflite";
-    private static final String[] BLUE_LABELS = {
-            "b",
-    }   ;
-
-    private static final String RED_TFOD_MODEL_ASSET = "rr.tflite";
-    private static final String[] RED_LABELS = {
-            "r",
-    }   ;
+    public tFod tFod = new tFod();
+    public ElapsedTime timeSpent = new ElapsedTime();
 
     public boolean stopped = false;
     public double nerf = 1;
+    public boolean isSlow = false;
 
     public void runOpMode() {
         hang = new Hang(hardwareMap);
@@ -51,53 +62,8 @@ public class LinearOpModePlusConstants extends LinearOpMode{
         driveTrainAuto = new DriveTrainAuto(hardwareMap);
         driveTrainTeleOp = new DriveTrainTeleOp(hardwareMap);
         bannerBox = new BannerBox(hardwareMap);
+        purplePixel = new PurplePixel(hardwareMap);
     }
 
-    public void telemetryTfod() {
-
-        List<Recognition> currentRecognitions = tfod.getRecognitions();
-        telemetry.addData("# Objects Detected", currentRecognitions.size());
-
-        // Step through the list of recognitions and display info for each one.
-        for (Recognition recognition : currentRecognitions) {
-            double x = (recognition.getLeft() + recognition.getRight()) / 2 ;
-            double y = (recognition.getTop()  + recognition.getBottom()) / 2 ;
-
-            telemetry.addData(""," ");
-            telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100);
-            telemetry.addData("- Position", "%.0f / %.0f", x, y);
-            telemetry.addData("- Size", "%.0f x %.0f", recognition.getWidth(), recognition.getHeight());
-        }   // end for() loop
-
-    }   // end method telemetryTfod()*/
-
-    public void initTfod(boolean isBlue) {
-
-        // Create the TensorFlow processor by using a builder.
-        if (isBlue) {
-            tfod = new TfodProcessor.Builder()
-                    .setModelAssetName(BLUE_TFOD_MODEL_ASSET)
-                    .setModelLabels(BLUE_LABELS)
-                    .build();
-        } else {
-            tfod = new TfodProcessor.Builder()
-                    .setModelAssetName(RED_TFOD_MODEL_ASSET)
-                    .setModelLabels(RED_LABELS)
-                    .build();
-        }
-
-        // Create the vision portal by using a builder.
-        VisionPortal.Builder builder = new VisionPortal.Builder();
-
-        // Set the camera (webcam vs. built-in RC phone camera).
-        if (USE_WEBCAM) {
-            builder.setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"));
-        } else {
-            builder.setCamera(BuiltinCameraDirection.BACK);
-        }
-        builder.addProcessor(tfod);
-
-        visionPortal = builder.build();
-    }
 
 }

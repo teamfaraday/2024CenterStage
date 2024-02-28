@@ -1,41 +1,40 @@
 package org.firstinspires.ftc.teamcode.faradaycode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-
-import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.teamcode.faradaycode.LinearOpModePlusConstants;
 
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import java.util.List;
 
-@Autonomous(name = "autoexample")
-public class autoexample extends LinearOpModePlusConstants {
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "auto")
+public class auto extends LinearOpModePlusConstants {
 
     public void runOpMode() {
+        super.runOpMode();
 
         //initialization
-        initTfod(true);
+        tFod.initTfod(true);
         telemetry.addData("DS preview on/off", "3 dots, Camera Stream");
         telemetry.addData(">", "Touch Play to start OpMode");
         telemetry.update();
-        while (opModeInInit()) { telemetryTfod();}
+        while (opModeInInit()) { tFod.telemetryTfod();}
         waitForStart();
         sleep(3000);
 
         //actual auto
-        List<Recognition> currentRecognitions = tfod.getRecognitions();
-        currentRecognitions = tfod.getRecognitions();
+        List<Recognition> currentRecognitions = tFod.tfod.getRecognitions();
+        currentRecognitions = tFod.tfod.getRecognitions();
         if (currentRecognitions.size() != 0 && !stopped) {
             stopped = true;
 
         }
         else {
-            currentRecognitions = tfod.getRecognitions();
+            currentRecognitions = tFod.tfod.getRecognitions();
             if (currentRecognitions.size() != 0 && !stopped) {
                 stopped = true;
 
             }
         }
 
-        telemetryTfod();
+        tFod.telemetryTfod();
 
         // Push telemetry to the Driver Station.
         telemetry.update();

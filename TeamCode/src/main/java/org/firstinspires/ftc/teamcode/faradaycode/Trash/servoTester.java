@@ -16,24 +16,16 @@ public class servoTester extends LinearOpMode {
 
     public boolean stopped = false;
 
-
     @Override
     public void runOpMode() {
 
         servoTest = hardwareMap.servo.get("servo");
-
-
         waitForStart();
 
-
         while (opModeIsActive() && stopped == false) {
-            stopped = false;
             servoTest.setPosition(1);
 
         }
-
-
-
 
     }
 
