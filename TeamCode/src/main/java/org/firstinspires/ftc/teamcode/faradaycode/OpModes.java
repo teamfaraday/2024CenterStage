@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.faradaycode.components.tFod;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-public class LinearOpModePlusConstants extends LinearOpMode{
+public class OpModes extends LinearOpMode{
     /*
     Control Hub
         Motors
@@ -51,7 +51,7 @@ public class LinearOpModePlusConstants extends LinearOpMode{
     public ElapsedTime timeSpent = new ElapsedTime();
 
     public boolean stopped = false;
-    public double nerf = 1;
+    public double nerf = 0;
     public boolean isSlow = false;
 
     public void runOpMode() {

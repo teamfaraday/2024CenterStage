@@ -8,10 +8,10 @@ public class DriveTrainTeleOp extends DriveTrainConstants {
     public double slowConst = 0.45;
 
     public DriveTrainTeleOp(HardwareMap hardwareMap) {
-        fL = hardwareMap.get(DcMotor.class, "frontLeft");
-        fR = hardwareMap.get(DcMotor.class, "frontRight");
-        bL = hardwareMap.get(DcMotor.class, "backLeft");
-        bR = hardwareMap.get(DcMotor.class, "backRight");
+        fL = hardwareMap.get(DcMotor.class, "leftFront");
+        fR = hardwareMap.get(DcMotor.class, "rightFront");
+        bL = hardwareMap.get(DcMotor.class, "leftRear");
+        bR = hardwareMap.get(DcMotor.class, "rightRear");
         fL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         fR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         bL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

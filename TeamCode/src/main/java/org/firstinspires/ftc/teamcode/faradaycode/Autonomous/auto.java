@@ -1,11 +1,11 @@
 package org.firstinspires.ftc.teamcode.faradaycode.Autonomous;
-import org.firstinspires.ftc.teamcode.faradaycode.LinearOpModePlusConstants;
+import org.firstinspires.ftc.teamcode.faradaycode.OpModes;
 
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import java.util.List;
 
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "auto")
-public class auto extends LinearOpModePlusConstants {
+public class auto extends OpModes {
 
     public void runOpMode() {
         super.runOpMode();

@@ -1,8 +1,8 @@
 package org.firstinspires.ftc.teamcode.faradaycode.TeleOp;
-import org.firstinspires.ftc.teamcode.faradaycode.LinearOpModePlusConstants;
+import org.firstinspires.ftc.teamcode.faradaycode.OpModes;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleIsOpping")
-public class TeleIsOpping extends LinearOpModePlusConstants {
+public class TeleIsOpping extends OpModes {
     public void runOpMode(){
         super.runOpMode();
         waitForStart();
@@ -21,6 +21,7 @@ public class TeleIsOpping extends LinearOpModePlusConstants {
             //slide
             if (gamepad1.left_bumper){
                 slide.down(isSlow, nerf);
+                bannerBox.intakePos();
             } else if (gamepad1.right_bumper) {
                 slide.up(isSlow, nerf);
             } else {
@@ -52,27 +53,21 @@ public class TeleIsOpping extends LinearOpModePlusConstants {
                 drone.launch();
             }
 
-            //purplepixel
-            if (gamepad1.left_trigger > 0.6) {
-                purplePixel.init();
-            } else {
-                purplePixel.release();
-            }
 
             //bannerbox
+            if (gamepad1.y) {
+                bannerBox.dropPos(nerf);
+            }
             if (gamepad1.x) {
                 bannerBox.intakePos();
-            }
-            if (gamepad1.y) {
-                bannerBox.dropPos();
             }
 
             //nerf
             if (gamepad1.dpad_right) {
-                nerf += 0.001;
+                nerf += 0.00001;
             }
             if (gamepad1.dpad_left) {
-                nerf -= 0.001;
+                nerf -= 0.00001;
             }
 
             //failsafe

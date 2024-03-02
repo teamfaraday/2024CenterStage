@@ -6,12 +6,12 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 public class BannerBox {
 
     //y
-    public double rotate1Drop = 0.35; //right drop
-    public double rotate2Drop = 0.713; //left drop
+    public double rotate1Drop = 0.3; //right drop
+    public double rotate2Drop = 0.763; //left drop
     public double releaseClose = 0.21; //release open
 
     //x
-    public double rotate1Intake = 0.72; //right intake
+    public double rotate1Intake = 0.6; //right intake
     public double rotate2Intake = 1 - rotate1Intake; //left intake
     public double releaseOpen = 0.55; //release close
 
@@ -26,15 +26,15 @@ public class BannerBox {
         release = hardwareMap.get(Servo.class, "release");
     }
 
-    public void dropPos( ) {
+    public void intakePos( ) {
         rotate1.setPosition(rotate1Intake);
         rotate2.setPosition(rotate2Intake);
-        open();
+        close();
     }
-    public void intakePos() {
+    public void dropPos(double nerf) {
         rotate1.setPosition(rotate1Drop);
         rotate2.setPosition(rotate2Drop);
-        close();
+        open();
     }
     public void close() {
         release.setPosition(releaseClose);
