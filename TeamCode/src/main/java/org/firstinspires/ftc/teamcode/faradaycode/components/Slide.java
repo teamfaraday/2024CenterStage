@@ -51,6 +51,10 @@ public class Slide {
         slide.setPower(antiGravPower);
         slide2.setPower(antiGravPower);
     }
+    public void slowUp() {
+        slide.setPower(0.2);
+        slide2.setPower(0.2);
+    }
     public void deactivate() {
         slide.setPower(0);
         slide2.setPower(0);

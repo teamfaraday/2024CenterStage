@@ -1,14 +1,18 @@
 package org.firstinspires.ftc.teamcode.faradaycode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+
 import org.firstinspires.ftc.teamcode.faradaycode.OpModes;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleIsOpping")
 public class TeleIsOpping extends OpModes {
     public void runOpMode(){
         super.runOpMode();
+        driveTrainTeleOp.reverseDir();
+
         waitForStart();
 
         drone.init();
-        bannerBox.intakePos();
+        bannerBox.intakePos(nerf);
 
         while (opModeIsActive() && !stopped){
 
@@ -21,7 +25,7 @@ public class TeleIsOpping extends OpModes {
             //slide
             if (gamepad1.left_bumper){
                 slide.down(isSlow, nerf);
-                bannerBox.intakePos();
+                bannerBox.intakePos(nerf);
             } else if (gamepad1.right_bumper) {
                 slide.up(isSlow, nerf);
             } else {
@@ -59,19 +63,20 @@ public class TeleIsOpping extends OpModes {
                 bannerBox.dropPos(nerf);
             }
             if (gamepad1.x) {
-                bannerBox.intakePos();
+                bannerBox.intakePos(nerf);
             }
 
             //nerf
             if (gamepad1.dpad_right) {
-                nerf += 0.00001;
+                nerf += 0.0001;
             }
             if (gamepad1.dpad_left) {
-                nerf -= 0.00001;
+                nerf -= 0.0001;
             }
 
             //failsafe
             if (gamepad1.left_bumper && gamepad1.left_trigger >= 0.6 && gamepad1.right_bumper && gamepad1.right_trigger >= 0.6) { stopped = true;}
+
 
             //slow movement
             isSlow = gamepad1.right_trigger >= 0.6;

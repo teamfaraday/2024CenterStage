@@ -5,11 +5,14 @@ import org.firstinspires.ftc.teamcode.faradaycode.components.Hang;
 import org.firstinspires.ftc.teamcode.faradaycode.components.Intake;
 import org.firstinspires.ftc.teamcode.faradaycode.components.Slide;
 import org.firstinspires.ftc.teamcode.faradaycode.components.Drone;
-import org.firstinspires.ftc.teamcode.faradaycode.components.DriveTrain.DriveTrainAuto;
+//import org.firstinspires.ftc.teamcode.faradaycode.components.DriveTrain.DriveTrainAuto;
 import org.firstinspires.ftc.teamcode.faradaycode.components.DriveTrain.DriveTrainTeleOp;
 import org.firstinspires.ftc.teamcode.faradaycode.components.BannerBox;
 import org.firstinspires.ftc.teamcode.faradaycode.components.PurplePixel;
-import org.firstinspires.ftc.teamcode.faradaycode.components.tFod;
+import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 
 
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -42,24 +45,25 @@ public class OpModes extends LinearOpMode{
     public Intake intake;
     public Slide slide;
     public Drone drone;
-    public DriveTrainAuto driveTrainAuto;
+   // public DriveTrainAuto driveTrainAuto;
     public DriveTrainTeleOp driveTrainTeleOp;
     public BannerBox bannerBox;
     public PurplePixel purplePixel;
 
-    public tFod tFod = new tFod();
     public ElapsedTime timeSpent = new ElapsedTime();
 
     public boolean stopped = false;
     public double nerf = 0;
     public boolean isSlow = false;
+    public boolean isSlow1 = false;
+    public boolean isSlow2 = false;
 
     public void runOpMode() {
         hang = new Hang(hardwareMap);
         intake = new Intake(hardwareMap);
         slide = new Slide(hardwareMap);
         drone = new Drone(hardwareMap);
-        driveTrainAuto = new DriveTrainAuto(hardwareMap);
+      //  driveTrainAuto = new DriveTrainAuto(hardwareMap);
         driveTrainTeleOp = new DriveTrainTeleOp(hardwareMap);
         bannerBox = new BannerBox(hardwareMap);
         purplePixel = new PurplePixel(hardwareMap);

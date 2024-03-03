@@ -5,8 +5,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class PurplePixel {
 
-    public double initPos = 0.5;
-    public double releasePos = 0.78;
+    public double initPos = 0.9;
+    public double releasePos = 0.5;
 
     public Servo purplePixel;
 

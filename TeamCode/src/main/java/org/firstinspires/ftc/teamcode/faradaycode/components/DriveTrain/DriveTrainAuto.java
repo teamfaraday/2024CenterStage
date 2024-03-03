@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.faradaycode.components.DriveTrain;
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -21,6 +23,10 @@ public class DriveTrainAuto extends DriveTrainConstants {
         bR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         fR.setDirection(DcMotor.Direction.REVERSE);
         bR.setDirection(DcMotor.Direction.REVERSE);
+        fL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        fR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        bL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        bR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     public void moveBot(double moveSpeed, double moveInches, boolean lf, boolean rf, boolean lb, boolean rb) {

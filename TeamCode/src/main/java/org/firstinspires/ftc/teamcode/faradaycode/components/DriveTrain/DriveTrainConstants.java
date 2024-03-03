@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.faradaycode.components.DriveTrain;
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 public class DriveTrainConstants {

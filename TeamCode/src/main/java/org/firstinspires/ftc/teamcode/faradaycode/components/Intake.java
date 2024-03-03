@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class Intake {
 
-    public double intakeAPower = 0.544;
+    public double intakeAPower = 0.744;
     public double intakeBPower = 1;
 
     public DcMotor intakeA;

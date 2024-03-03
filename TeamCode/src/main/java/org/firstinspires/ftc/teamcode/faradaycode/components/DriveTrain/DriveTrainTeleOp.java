@@ -16,8 +16,6 @@ public class DriveTrainTeleOp extends DriveTrainConstants {
         fR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         bL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         bR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        fR.setDirection(DcMotor.Direction.REVERSE);
-        bR.setDirection(DcMotor.Direction.REVERSE);
         fL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         fR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         bL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -41,5 +39,9 @@ public class DriveTrainTeleOp extends DriveTrainConstants {
             fR.setPower(frontRightPower * slowConst);
             bR.setPower(backRightPower * slowConst);
         }
+    }
+    public void reverseDir() {
+        fR.setDirection(DcMotor.Direction.REVERSE);
+        bR.setDirection(DcMotor.Direction.REVERSE);
     }
 }
