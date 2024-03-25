@@ -5,14 +5,12 @@ import org.firstinspires.ftc.teamcode.faradaycode.components.Hang;
 import org.firstinspires.ftc.teamcode.faradaycode.components.Intake;
 import org.firstinspires.ftc.teamcode.faradaycode.components.Slide;
 import org.firstinspires.ftc.teamcode.faradaycode.components.Drone;
+import org.firstinspires.ftc.teamcode.faradaycode.components.Nerf;
 //import org.firstinspires.ftc.teamcode.faradaycode.components.DriveTrain.DriveTrainAuto;
 import org.firstinspires.ftc.teamcode.faradaycode.components.DriveTrain.DriveTrainTeleOp;
 import org.firstinspires.ftc.teamcode.faradaycode.components.BannerBox;
 import org.firstinspires.ftc.teamcode.faradaycode.components.PurplePixel;
-import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
-import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
+
 
 
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -49,14 +47,17 @@ public class OpModes extends LinearOpMode{
     public DriveTrainTeleOp driveTrainTeleOp;
     public BannerBox bannerBox;
     public PurplePixel purplePixel;
+    public Nerf Nerf = new Nerf();
 
     public ElapsedTime timeSpent = new ElapsedTime();
 
     public boolean stopped = false;
-    public double nerf = 0;
+    public double nerf = 1;
     public boolean isSlow = false;
     public boolean isSlow1 = false;
     public boolean isSlow2 = false;
+    public static boolean t = true;
+    public static boolean f = false;
 
     public void runOpMode() {
         hang = new Hang(hardwareMap);

@@ -6,14 +6,14 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 public class BannerBox {
 
     //y
-    public double rotate1Drop = 3; //right drop
-    public double rotate2Drop = 0.863; //left drop
-    public double releaseClose = 0.21; //release open
+    public double rotate1Drop = 0.2464; //right drop
+    public double rotate2Drop = 0.8331; //left drop
+    public double releaseClose = 0.14; //release open
 
     //x
     public double rotate1Intake = 0.702; //right intake
-    public double rotate2Intake = 0.5428; //left intake
-    public double releaseOpen = 0.55; //release close
+    public double rotate2Intake = 0.5325; //left intake
+    public double releaseOpen = 0.72; //release close
 
     public Servo rotate1;
     public Servo rotate2;
@@ -26,20 +26,26 @@ public class BannerBox {
         release = hardwareMap.get(Servo.class, "release");
     }
 
+    public void iterate(boolean intake, boolean drop, double nerf, boolean slideDown) {
+        if (intake) {intakePos(nerf);}
+        if (drop) {dropPos(nerf);}
+        if (slideDown) {intakePos(nerf);}
+    }
+
     public void intakePos(double nerf) {
         rotate1.setPosition(rotate1Intake);
         rotate2.setPosition(rotate2Intake);
-        close();
+        close(nerf);
     }
     public void dropPos(double nerf) {
         rotate1.setPosition(rotate1Drop);
         rotate2.setPosition(rotate2Drop);
-        open();
+        open(nerf);
     }
-    public void close() {
+    public void close(double nerf) {
         release.setPosition(releaseClose);
     }
-    public void open() {
+    public void open(double nerf) {
         release.setPosition(releaseOpen);
     }
 }

@@ -1,6 +1,9 @@
-package org.firstinspires.ftc.teamcode.faradaycode.TeleOp;
+package org.firstinspires.ftc.teamcode.faradaycode.Trash;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+
 import org.firstinspires.ftc.teamcode.faradaycode.OpModes;
 
+@Disabled
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "antiGrav")
 public class antiGrav extends OpModes {
     public void runOpMode() {

@@ -1,6 +1,9 @@
-package org.firstinspires.ftc.teamcode.faradaycode.TeleOp;
+package org.firstinspires.ftc.teamcode.faradaycode.Trash;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+
 import org.firstinspires.ftc.teamcode.faradaycode.OpModes;
 
+@Disabled
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleIsOpping2P")
 public class TeleIsOpping2P extends OpModes {
     public void runOpMode(){
@@ -29,7 +32,7 @@ public class TeleIsOpping2P extends OpModes {
             telemetry.update();
 
             //drivetrain
-            driveTrainTeleOp.move(isSlow1, nerf, gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
+            driveTrainTeleOp.iterate(isSlow1, nerf, gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
 
             //intake
             if (gamepad1.b) {

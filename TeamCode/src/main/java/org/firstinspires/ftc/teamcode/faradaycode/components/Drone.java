@@ -14,6 +14,9 @@ public class Drone {
         drone = hardwareMap.servo.get("drone");
     }
 
+    public void iterate(boolean launch) {
+        launch();
+    }
     public void init() {
         drone.setPosition(initPos);
     }

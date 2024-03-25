@@ -21,6 +21,16 @@ public class Intake {
         intakeB2.setDirection(CRServo.Direction.REVERSE);
     }
 
+    public void iterate(boolean forward, boolean reverse, boolean isSlow, double nerf) {
+        if (forward) {
+            activate(isSlow, nerf);
+        } else if (reverse) {
+            reverse(isSlow, nerf);
+        } else{
+            deactivate();
+        }
+    }
+
     public void activate(boolean isSlow, double nerf) {
         intakeA.setPower(intakeAPower);
         intakeB1.setPower(intakeBPower);

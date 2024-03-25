@@ -25,6 +25,19 @@ public class Slide {
         slide2.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
+    public void iterate(boolean up, boolean down, boolean isSlow, double nerf, boolean intakes) {
+        if (down){
+            down(isSlow, nerf);
+        } else if (up) {
+            up(isSlow, nerf);
+        } else {
+            antiGrav();
+        }
+        if (intakes) {
+            slowDown();
+        }
+    }
+
     public void up(boolean isSlow, double nerf) {
         if (!isSlow) {
             slide.setPower(slidePower);

@@ -22,7 +22,7 @@ public class DriveTrainTeleOp extends DriveTrainConstants {
         bR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
-    public void move(boolean isSlow, double nerf, double forwardSpeed, double strafeSpeed, double turnSpeed) {
+    public void iterate(boolean isSlow, double nerf, double forwardSpeed, double strafeSpeed, double turnSpeed) {
         double denominator = Math.max(Math.abs(forwardSpeed) + Math.abs(strafeSpeed) + Math.abs(turnSpeed), powerRange);
         double frontLeftPower = ((forwardSpeed - strafeSpeed - turnSpeed)) / denominator;
         double frontRightPower = ((forwardSpeed + strafeSpeed + turnSpeed)) / denominator;

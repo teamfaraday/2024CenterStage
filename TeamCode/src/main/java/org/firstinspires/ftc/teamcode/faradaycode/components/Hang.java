@@ -15,6 +15,16 @@ public class Hang {
         hang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
+    public void iterate(boolean up,boolean down, boolean isSlow, double nerf){
+        if (up) {
+            up(isSlow, nerf);
+        } else if (down) {
+            down(isSlow, nerf);
+        } else {
+            deactivate();
+        }
+    }
+
     public void up(boolean isSlow, double nerf) {
         if (!isSlow) {
             hang.setPower(hangPower);
