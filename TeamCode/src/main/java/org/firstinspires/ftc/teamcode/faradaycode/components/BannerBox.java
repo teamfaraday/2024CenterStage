@@ -3,7 +3,10 @@ package org.firstinspires.ftc.teamcode.faradaycode.components;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-public class BannerBox {
+import org.firstinspires.ftc.teamcode.faradaycode.OpModes;
+import org.firstinspires.ftc.teamcode.faradaycode.TeleOp.TeleIsOpping;
+
+public class BannerBox extends TeleIsOpping {
 
     //y
     public double rotate1Drop = 0.2464; //right drop
@@ -19,17 +22,16 @@ public class BannerBox {
     public Servo rotate2;
     public Servo release;
 
-
     public BannerBox(HardwareMap hardwareMap) {
         rotate1 = hardwareMap.get(Servo.class, "rotate1");
         rotate2 = hardwareMap.get(Servo.class, "rotate2");
         release = hardwareMap.get(Servo.class, "release");
     }
 
-    public void iterate(boolean intake, boolean drop, double nerf, boolean slideDown) {
-        if (intake) {intakePos(nerf);}
-        if (drop) {dropPos(nerf);}
-        if (slideDown) {intakePos(nerf);}
+    public void iterate(boolean intake, boolean drop, boolean slideDown) {
+        if (intake) {intakePos(OpModes.nerf);}
+        if (drop) {dropPos(OpModes.nerf);}
+        if (slideDown) {intakePos(OpModes.nerf);}
     }
 
     public void intakePos(double nerf) {

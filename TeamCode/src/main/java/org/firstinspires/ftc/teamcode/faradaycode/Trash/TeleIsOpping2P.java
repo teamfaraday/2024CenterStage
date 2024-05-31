@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.faradaycode.Trash;
+/*package org.firstinspires.ftc.teamcode.faradaycode.Trash;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.faradaycode.OpModes;
@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.faradaycode.OpModes;
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleIsOpping2P")
 public class TeleIsOpping2P extends OpModes {
     public void runOpMode(){
-        super.runOpMode();
+        super.turnOn(true);
         driveTrainTeleOp.reverseDir();
 
         waitForStart();
@@ -23,7 +23,7 @@ public class TeleIsOpping2P extends OpModes {
             slides
             box
             hang
-            drone*/
+            drone
 
 
         while (opModeIsActive() && !stopped){
@@ -94,4 +94,4 @@ public class TeleIsOpping2P extends OpModes {
 
         }
     }
-}
+}*/

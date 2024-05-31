@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.faradaycode.components;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.faradaycode.OpModes;
+
 public class Hang {
 
     public double hangPower = 1;
@@ -15,28 +17,28 @@ public class Hang {
         hang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
-    public void iterate(boolean up,boolean down, boolean isSlow, double nerf){
+    public void iterate(boolean up,boolean down){
         if (up) {
-            up(isSlow, nerf);
+            up();
         } else if (down) {
-            down(isSlow, nerf);
+            down();
         } else {
             deactivate();
         }
     }
 
-    public void up(boolean isSlow, double nerf) {
-        if (!isSlow) {
-            hang.setPower(hangPower);
+    public void up() {
+        if (!OpModes.isSlow) {
+            hang.setPower(hangPower * OpModes.nerf);
         } else {
-            hang.setPower(hangPower * slowConst);
+            hang.setPower(hangPower * slowConst * OpModes.nerf);
         }
     }
-    public void down(boolean isSlow, double nerf) {
-        if (!isSlow) {
-            hang.setPower(-hangPower);
+    public void down() {
+        if (!OpModes.isSlow) {
+            hang.setPower(-hangPower * OpModes.nerf);
         } else {
-            hang.setPower(-hangPower * slowConst);
+            hang.setPower(-hangPower * slowConst * OpModes.nerf);
         }
     }
     public void deactivate() {

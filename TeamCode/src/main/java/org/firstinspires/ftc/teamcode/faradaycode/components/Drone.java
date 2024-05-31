@@ -17,10 +17,6 @@ public class Drone {
     public void iterate(boolean launch) {
         launch();
     }
-    public void init() {
-        drone.setPosition(initPos);
-    }
-    public void launch() {
-        drone.setPosition(launchPos);
-    }
+    public void init() {drone.setPosition(initPos);}
+    public void launch() {drone.setPosition(launchPos);}
 }

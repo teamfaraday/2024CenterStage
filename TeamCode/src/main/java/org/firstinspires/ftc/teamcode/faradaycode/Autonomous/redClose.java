@@ -38,7 +38,7 @@ public class redClose extends OpModes {
     public boolean isRight = false;
 
     public void runOpMode() {
-        super.runOpMode();
+        super.turnOn(false);
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
         initTfod(false);
@@ -161,13 +161,15 @@ public class redClose extends OpModes {
         if (isLeft) {drive.followTrajectorySequence(yellowLeft);}
         if (isCent) {drive.followTrajectorySequence(yellowCent);}
         if (isRight) {drive.followTrajectorySequence(yellowRight);}
-        slide.up(true, 1);
+        isSlow = true;
+        slide.up();
         sleep(1600);
         slide.antiGrav();
         bannerBox.dropPos(1);
         sleep(1000);
         bannerBox.intakePos(1);
-        slide.down(true, 1);
+        isSlow = true;
+        slide.down();
         sleep(1400);
         slide.antiGrav();
         if (isLeft) {drive.followTrajectorySequence(parkLeft);}

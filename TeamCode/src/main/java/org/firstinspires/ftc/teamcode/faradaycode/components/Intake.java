@@ -4,6 +4,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.faradaycode.OpModes;
+
 public class Intake {
 
     public double intakeAPower = 0.744;
@@ -21,15 +23,17 @@ public class Intake {
         intakeB2.setDirection(CRServo.Direction.REVERSE);
     }
 
-    public void iterate(boolean forward, boolean reverse, boolean isSlow, double nerf) {
+    public void iterate(boolean forward, boolean reverse) {
         if (forward) {
-            activate(isSlow, nerf);
+            activate(OpModes.isSlow, OpModes.nerf);
         } else if (reverse) {
-            reverse(isSlow, nerf);
+            reverse(OpModes.isSlow, OpModes.nerf);
         } else{
             deactivate();
         }
     }
+
+    public void iterate (boolean memorySaver) {}
 
     public void activate(boolean isSlow, double nerf) {
         intakeA.setPower(intakeAPower);

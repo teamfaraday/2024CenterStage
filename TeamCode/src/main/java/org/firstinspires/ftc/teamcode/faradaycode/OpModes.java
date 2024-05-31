@@ -12,10 +12,10 @@ import org.firstinspires.ftc.teamcode.faradaycode.components.BannerBox;
 import org.firstinspires.ftc.teamcode.faradaycode.components.PurplePixel;
 
 
-
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-public class OpModes extends LinearOpMode{
+public abstract class OpModes extends LinearOpMode{
     /*
     Control Hub
         Motors
@@ -52,23 +52,22 @@ public class OpModes extends LinearOpMode{
     public ElapsedTime timeSpent = new ElapsedTime();
 
     public boolean stopped = false;
-    public double nerf = 1;
-    public boolean isSlow = false;
+    public static double nerf = 1;
+    public static boolean isSlow = false;
     public boolean isSlow1 = false;
     public boolean isSlow2 = false;
     public static boolean t = true;
     public static boolean f = false;
 
-    public void runOpMode() {
+    public void turnOn(boolean dtReverse) {
         hang = new Hang(hardwareMap);
         intake = new Intake(hardwareMap);
         slide = new Slide(hardwareMap);
         drone = new Drone(hardwareMap);
       //  driveTrainAuto = new DriveTrainAuto(hardwareMap);
-        driveTrainTeleOp = new DriveTrainTeleOp(hardwareMap);
+        driveTrainTeleOp = new DriveTrainTeleOp(hardwareMap, dtReverse);
         bannerBox = new BannerBox(hardwareMap);
         purplePixel = new PurplePixel(hardwareMap);
     }
-
 
 }

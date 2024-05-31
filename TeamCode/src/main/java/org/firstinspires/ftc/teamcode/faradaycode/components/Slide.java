@@ -4,6 +4,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.faradaycode.OpModes;
+
 public class Slide {
 
     public double slidePower = 1;
@@ -25,11 +27,11 @@ public class Slide {
         slide2.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
-    public void iterate(boolean up, boolean down, boolean isSlow, double nerf, boolean intakes) {
+    public void iterate(boolean up, boolean down, boolean intakes) {
         if (down){
-            down(isSlow, nerf);
+            down();
         } else if (up) {
-            up(isSlow, nerf);
+            up();
         } else {
             antiGrav();
         }
@@ -38,22 +40,22 @@ public class Slide {
         }
     }
 
-    public void up(boolean isSlow, double nerf) {
-        if (!isSlow) {
-            slide.setPower(slidePower);
-            slide2.setPower(slidePower);
+    public void up() {
+        if (!OpModes.isSlow) {
+            slide.setPower(slidePower * OpModes.nerf);
+            slide2.setPower(slidePower * OpModes.nerf);
         } else {
-            slide.setPower(slidePower * slowConst);
-            slide2.setPower(slidePower * slowConst);
+            slide.setPower(slidePower * slowConst * OpModes.nerf);
+            slide2.setPower(slidePower * slowConst * OpModes.nerf);
         }
     }
-    public void down(boolean isSlow, double nerf) {
-        if (!isSlow) {
-            slide.setPower(-slidePower);
-            slide2.setPower(-slidePower);
+    public void down() {
+        if (!OpModes.isSlow) {
+            slide.setPower(-slidePower * OpModes.nerf);
+            slide2.setPower(-slidePower * OpModes.nerf);
         } else {
-            slide.setPower(-slidePower * slowConst * 0.6);
-            slide2.setPower(-slidePower * slowConst * 0.6);
+            slide.setPower(-slidePower * slowConst * 0.6 * OpModes.nerf);
+            slide2.setPower(-slidePower * slowConst * 0.6 * OpModes.nerf);
         }
     }
     public void slowDown() {

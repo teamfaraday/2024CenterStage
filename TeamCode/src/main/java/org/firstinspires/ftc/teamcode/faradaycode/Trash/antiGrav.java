@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.faradaycode.Trash;
+/*package org.firstinspires.ftc.teamcode.faradaycode.Trash;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.faradaycode.OpModes;
@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.faradaycode.OpModes;
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "antiGrav")
 public class antiGrav extends OpModes {
     public void runOpMode() {
-        super.runOpMode();
+        super.turnOn(true);
         waitForStart();
 
         while (opModeIsActive()) {
@@ -28,4 +28,4 @@ public class antiGrav extends OpModes {
 
     }
 
-}
+}*/
